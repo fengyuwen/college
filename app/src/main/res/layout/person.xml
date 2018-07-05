@@ -4,26 +4,6 @@
               android:layout_height="match_parent"
               android:orientation="horizontal">
 
-    <RadioGroup
-        android:id="@+id/rg_tab_bar"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:orientation="horizontal" >
-
-        <RadioButton
-            android:id="@+id/rb_me"
-            style="@style/tab_menu_item"
-            android:text="@string/me" />
-
-        <RadioButton
-            android:id="@+id/rb_score"
-            style="@style/tab_menu_item"
-            android:text="@string/score" />
-
-    </RadioGroup>
-
     <RelativeLayout
         android:id="@+id/top_title"
         android:layout_width="match_parent"
