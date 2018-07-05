@@ -16,7 +16,6 @@ import com.mmvtc.college.Utils.Local;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -59,13 +58,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("GET");
                     conn.setConnectTimeout(5000);
-                    if (!cookie.isEmpty()) conn.setRequestProperty("Cookie", cookie);
+                    if (!cookie.isEmpty()) conn.setRequestProperty("Cookie", "ASP.NET_SessionId="+cookie);
                     int code = conn.getResponseCode();
                     if (code == 200) {
                         if (cookie.isEmpty()) {
                             cookie = conn.getHeaderField("Set-Cookie");
+                            Log.i(TAG, "run: "+cookie);
                             cookie = cookie.substring(cookie.indexOf("=")+1, cookie.indexOf(";"));
-                            Local.saveCookie(LoginActivity.this, cookie);
+                            Log.i(TAG, "run: "+cookie);
                         }
                         InputStream is = conn.getInputStream();
                         final Bitmap bitmap = BitmapFactory.decodeStream(is);
@@ -106,42 +106,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         new Thread(new Runnable() {
             @Override
             public void run() {
-                /*try {
-                    URL url = new URL(Local.url+"default2.aspx");
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("POST");
-                    conn.setConnectTimeout(5000);
-                    String data = "__VIEWSTATE=" + URLEncoder.encode("dDw3OTkxMjIwNTU7Oz5qFv56B08dbR82AMSOW+P8WDKexA==")
-                            + "&TextBox1=" + URLEncoder.encode(user)
-                            + "&TextBox2=" + URLEncoder.encode(passwrod)
-                            + "&TextBox3=" + URLEncoder.encode(vertift)
-                            + "&RadioButtonList1=" + URLEncoder.encode("学生")
-                            + "&Button1=" + "";
-                    conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                    conn.setRequestProperty("Cookie", cookie);
-                    conn.setDoOutput(true);
-                    OutputStream os = conn.getOutputStream();
-                    os.write(data.getBytes());
-                    int code = conn.getResponseCode();
-                    if (code == 200) {
-                        InputStream is = conn.getInputStream();
-                        final String result = new String(Local.read(is), "gb2312");
-                        Log.i("tags", "run: " + result);
-                        String s = result;
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }*/
-/*Document doc = Jsoup.connect("http://jwc.mmvtc.cn/default2.aspx")
-                            .data("TextBox1", "Java")
-                            .data("TextBox2", "Java")
-                            .userAgent("I’mjsoup")
-                            .cookie("auth", "token")
-                            .timeout(3000)
-                            .post();
-                    Element body = doc.body();
-                    Log.i("tags", ":"+body.text());*/
-                //http://jwc.mmvtc.cn/CheckCode.aspx
                 try {
                     Document doc = Jsoup.connect(Local.url+"default2.aspx")
                             .cookie("ASP.NET_SessionId",cookie)
@@ -154,13 +118,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             .timeout(3000)
                             .post();
                     Element body = doc.body();
-                    Elements a = body.getElementsByTag("a");
-                    Log.i(TAG, "run: "+body.text());
-              
+                  /*if (true){
+                      Elements as = body.getElementsByTag("a");
+                      for (Element a :as){
+                          Local.urls.put(a.text(),a.attr("href"));
+                          Log.i(TAG, "run: "+a.text()+":"+a.attr("href"));
+                      }
+                  }*/
+                    Log.i(TAG, "run: "+body.text()+":");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }
 
 

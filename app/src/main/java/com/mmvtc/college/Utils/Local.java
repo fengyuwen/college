@@ -6,12 +6,23 @@ import android.os.Bundle;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Local {
     /*
     * 学校官网网址
     * */
     public static String url = "http://jwc.mmvtc.cn/";
+    /*
+     * 学校官网连接集合
+     * */
+    public static Map<String,String> urls = new HashMap<>();
+    /*
+     * 学校官网连接集合
+     * */
+    public static String name = "";
     /*
      * 从输入流获取内容为字符组
      * */
@@ -45,20 +56,6 @@ public class Local {
         bundle.putString("user",sharedPreferences.getString("password",""));
         return bundle;
     }
-    /*
-     * 保存cookie
-     * */
-    public static void saveCookie(Context context,String cookie){
-        SharedPreferences sharedPreferences = context.getSharedPreferences("loginInfo",Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("cookie",cookie);
-        editor.commit();
-    }
-    /*
-     *读取Cookie
-     * */
-    public static String getCookie(Context context){
-        SharedPreferences sharedPreferences = context.getSharedPreferences("UserInfo",Context.MODE_PRIVATE);
-        return sharedPreferences.getString("Cookie","");
-    }
+
+
 }
