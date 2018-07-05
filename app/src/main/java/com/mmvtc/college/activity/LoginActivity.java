@@ -20,12 +20,10 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     String url = "";
     private ImageView ivVertify;
     private String user, passwrod, vertift;
@@ -37,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_logint);
+        setContentView(R.layout.activity_login);
         init();
         picUpdate();
     }
@@ -67,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         if (cookie.isEmpty()) {
                             cookie = conn.getHeaderField("Set-Cookie");
                             cookie = cookie.substring(cookie.indexOf("=")+1, cookie.indexOf(";"));
-                            Local.saveCookie(MainActivity.this, cookie);
+                            Local.saveCookie(LoginActivity.this, cookie);
                         }
                         InputStream is = conn.getInputStream();
                         final Bitmap bitmap = BitmapFactory.decodeStream(is);
