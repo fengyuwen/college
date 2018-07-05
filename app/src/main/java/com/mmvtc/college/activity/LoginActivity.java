@@ -131,6 +131,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                       for (Element a :as){
                           Local.urls.put(a.text(),a.attr("href"));
                       }
+
                         startActivity(new Intent(LoginActivity.this,MainActivity.class));
                         LoginActivity.this.finish();
                   }else {

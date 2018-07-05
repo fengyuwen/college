@@ -153,8 +153,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void setInitStatus() {
         clearBottomImageState();
-        setSelectedStatus(0);
-        createView(0);
+        setSelectedStatus(2);
+        createView(2);
     }
 
     private void selectDisplayView(int index) {
@@ -240,4 +240,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editor.putString("loginUserName", "");//清除登录时的用户名
         editor.commit();//提交修改
     }
+
+
 }
