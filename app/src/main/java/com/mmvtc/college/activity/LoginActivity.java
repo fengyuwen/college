@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText etUser, etPasswrod, etVertify;
     private String cookie = "";
     private Button btnLogin;
+    private CheckBox cbIsSave;
     private static final String TAG = "MainActivity";
 
     @Override
@@ -39,7 +41,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         init();
-        picUpdate();
+        vertiftUpdate();
     }
 
     private void init() {
@@ -48,11 +50,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         etUser = (EditText) findViewById(R.id.et_user);
         etPasswrod = (EditText) findViewById(R.id.et_password);
         btnLogin = (Button) findViewById(R.id.btn_login);
+        cbIsSave = (CheckBox) findViewById(R.id.cb_isSave);
         btnLogin.setOnClickListener(this);
         ivVertify.setOnClickListener(this);
+        Bundle userInfo= Local.getUserInfo(this);
+        if (!userInfo.get("password").equals("")&&!userInfo.get("user").equals("")){
+            etUser.setText(""+userInfo.get("user"));
+            etPasswrod.setText(""+userInfo.get("password"));
+        }
     }
 
-    public void picUpdate() {
+    public void vertiftUpdate() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -96,14 +104,21 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         vertift = etVertify.getText().toString().trim();
         switch (view.getId()) {
             case R.id.iv_vertify:
-                picUpdate();
+                vertiftUpdate();
                 break;
             case R.id.btn_login:
-                //需要改良
-                if (user.isEmpty() || passwrod.isEmpty() || vertift.isEmpty()) {
-                    Toast.makeText(this, "账号或秘密或验证码不能空", Toast.LENGTH_SHORT).show();
-                } else
+                if (user.isEmpty())
+                    Toast.makeText(this, "账号不能空", Toast.LENGTH_SHORT).show();
+                else if (passwrod.isEmpty())
+                    Toast.makeText(this, "密码不能空", Toast.LENGTH_SHORT).show();
+                else if (vertift.isEmpty())
+                    Toast.makeText(this, "验证码不能空", Toast.LENGTH_SHORT).show();
+                else {
                     login();
+                    if (cbIsSave.isChecked())
+                        Local.saveUserInfo(this, user, passwrod);
+                    else Local.saveUserInfo(this,"","");
+                }
                 break;
         }
     }
@@ -125,16 +140,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             .post();
                     Element body = doc.body();
                     Element script = doc.getElementsByTag("script").last();
-                    final String msg =  massage(script.html());
-                    if (msg.isEmpty()){
-                      Elements as = body.getElementsByTag("a");
-                      for (Element a :as){
-                          Local.urls.put(a.text(),a.attr("href"));
-                      }
-
-                        startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                    final String msg = massage(script.html());
+                    if (msg.isEmpty()) {
+                        Elements as = body.getElementsByTag("a");
+                        for (Element a : as) {
+                            Local.urls.put(a.text(), a.attr("href"));
+                        }
+                        Local.loginInfo(LoginActivity.this,body.getElementById("xhxm").text());
+                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         LoginActivity.this.finish();
-                  }else {
+                    } else {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -143,21 +158,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         });
                     }
                     Log.i(TAG, "run: " + body.text() + ":" + cookie);
-                    picUpdate();
+                    vertiftUpdate();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         }).start();
     }
-    private String massage(String msg){
-        String str="";
-        if (msg.indexOf("密码错误")!=-1){
-            str="如忘记密码，请与教务处联系！";
-        } else if (msg.indexOf("验证码不正确")!=-1){
-            str="验证码不正确";
+
+
+    private String massage(String msg) {
+        String str = "";
+        if (msg.indexOf("密码错误") != -1) {
+            str = "如忘记密码，请与教务处联系！";
+        } else if (msg.indexOf("验证码不正确") != -1) {
+            str = "验证码不正确";
         }
         return str;
-   }
+    }
 
 }
