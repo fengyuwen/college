@@ -17,11 +17,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mmvtc.college.R;
+import com.mmvtc.college.view.Grade;
 import com.mmvtc.college.view.MyInfoView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private MyInfoView mMyInfoView;
+<<<<<<< HEAD
+    private Grade mGrade;
+=======
+>>>>>>> 66a84e88b1a5ef6c83a065a3ef1336c060f644a5
 
     private FrameLayout mBodyLayout;
 
@@ -166,6 +171,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void createView(int viewIndex) {
         switch (viewIndex) {
             case 0:
+<<<<<<< HEAD
+                if (mGrade == null) {
+                    mGrade = new Grade(this);
+                    mBodyLayout.addView(mGrade.getView());
+                } else {
+                    mGrade.getView();
+                }
+                mGrade.showView();
+=======
                 /*if (mCourseView == null) {
                     mCourseView = new CourseView(this);
                     mBodyLayout.addView(mCourseView.getView());
@@ -173,6 +187,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mCourseView.getView();
                 }
                 mCourseView.showView();*/
+>>>>>>> 66a84e88b1a5ef6c83a065a3ef1336c060f644a5
                 break;
             case 1:
 
