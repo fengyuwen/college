@@ -2,7 +2,6 @@ package com.mmvtc.college.view;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mmvtc.college.R;
+import com.mmvtc.college.activity.LoginActivity;
 
 public class MyInfoView {
     public ImageView iv_head_icon;
@@ -54,6 +54,7 @@ public class MyInfoView {
                     //未登录跳转到登录界面
 
                 }
+                mContext.startActivity(mContext, LoginActivity.class);
             }
         });
         rl_course_history.setOnClickListener(new View.OnClickListener() {
