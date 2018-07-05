@@ -54,10 +54,10 @@ public class Local {
     /*
        * 保存用户帐号和登录状态
        * */
-    public static void loginInfo(Context context,String user){
+    public static void loginInfo(Context context,boolean login,String user){
         SharedPreferences sharedPreferences = context.getSharedPreferences("loginInfo",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putBoolean("isLogin",true);
+        editor.putBoolean("isLogin",login);
         editor.putString("user",user);
         editor.commit();
     }

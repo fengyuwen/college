@@ -146,7 +146,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         for (Element a : as) {
                             Local.urls.put(a.text(), a.attr("href"));
                         }
-                        Local.loginInfo(LoginActivity.this,body.getElementById("xhxm").text());
+                        Local.loginInfo(LoginActivity.this,true,body.getElementById("xhxm").text());
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         LoginActivity.this.finish();
                     } else {
