@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         rl_title_bar = (RelativeLayout) findViewById(R.id.title_bar);
         rl_title_bar.setBackgroundColor(Color.parseColor("#30B4FF"));
         tv_back.setVisibility(View.GONE);
+
         initBodyLayout();
     }
 
@@ -176,15 +177,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     mGrade.getView();
                 }
                 mGrade.showView();
-
-                /*if (mCourseView == null) {
-                    mCourseView = new CourseView(this);
-                    mBodyLayout.addView(mCourseView.getView());
-                } else {
-                    mCourseView.getView();
-                }
-                mCourseView.showView();*/
-
                 break;
             case 1:
 

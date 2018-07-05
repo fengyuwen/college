@@ -44,6 +44,7 @@ public class MyInfoView {
         tv_user_name=(TextView) mCurrentView.findViewById(R.id.tv_user_name);
         mCurrentView.setVisibility(View.VISIBLE);
         setLoginParams(readLoginStatus());//设置登录时界面控件的状态
+
         ll_head.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,8 +54,9 @@ public class MyInfoView {
 
                 }else{
                     //未登录跳转到登录界面
+                    mContext.startActivity(new Intent(mContext, LoginActivity.class));
                 }
-                mContext.startActivity(new Intent(mContext, LoginActivity.class));
+
             }
         });
         rl_course_history.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +87,7 @@ public class MyInfoView {
      */
     public void setLoginParams(boolean isLogin){
         if(isLogin){
-            //tv_user_name.setText(AnalysisUtils.readLoginUserName(mContext));
+            tv_user_name.setText(readUser());
         }else{
             tv_user_name.setText("点击登录");
         }
@@ -115,6 +117,14 @@ public class MyInfoView {
         SharedPreferences sp=mContext.getSharedPreferences("loginInfo", Context.MODE_PRIVATE);
         boolean isLogin=sp.getBoolean("isLogin", false);
         return isLogin;
+    }
+    /**
+     * 从SharedPreferences中读取用户名
+     */
+    private String readUser(){
+        SharedPreferences sp=mContext.getSharedPreferences("loginInfo", Context.MODE_PRIVATE);
+        String user=sp.getString("user","");
+        return user;
     }
 
 }
