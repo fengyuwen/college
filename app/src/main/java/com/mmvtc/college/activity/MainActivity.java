@@ -20,22 +20,13 @@ import com.mmvtc.college.R;
 import com.mmvtc.college.view.MyInfoView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    /**
-     * 视图
-     */
 
     private MyInfoView mMyInfoView;
-    /**
-     * 中间内容栏
-     */
+
     private FrameLayout mBodyLayout;
-    /**
-     * 底部按钮栏
-     */
+
     public LinearLayout mBottomLayout;
-    /**
-     * 底部按钮
-     */
+
     private View mCourseBtn;
     private View mExercisesBtn;
     private View mMyInfoBtn;
@@ -52,16 +43,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //设置此界面为竖屏
+
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         init();
         initBottomBar();
         setListener();
         setInitStatus();
     }
-    /**
-     * 获取界面上的UI控件
-     */
+
     private void init() {
         tv_back = (TextView) findViewById(R.id.tv_back);
         tv_main_title = (TextView) findViewById(R.id.tv_main_title);
@@ -71,9 +60,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tv_back.setVisibility(View.GONE);
         initBodyLayout();
     }
-    /**
-     * 获取底部导航栏上的控件
-     */
+
     private void initBottomBar() {
         mBottomLayout = (LinearLayout) findViewById(R.id.main_bottom_bar);
         mCourseBtn = findViewById(R.id.bottom_bar_course_btn);
@@ -89,23 +76,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void initBodyLayout() {
         mBodyLayout = (FrameLayout) findViewById(R.id.main_body);
     }
-    /**
-     * 控件的点击事件
-     */
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            //课程的点击事件
             case R.id.bottom_bar_course_btn:
                 clearBottomImageState();
                 selectDisplayView(0);
                 break;
-            //习题的点击事件
             case R.id.bottom_bar_exercises_btn:
                 clearBottomImageState();
                 selectDisplayView(1);
                 break;
-            //我的点击事件
             case R.id.bottom_bar_myinfo_btn:
                 clearBottomImageState();
                 selectDisplayView(2);
@@ -117,17 +99,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-    /**
-     * 设置底部三个按钮的点击监听事件
-     */
+
     private void setListener() {
         for (int i = 0; i < mBottomLayout.getChildCount(); i++) {
             mBottomLayout.getChildAt(i).setOnClickListener(this);
         }
     }
-    /**
-     * 清除底部按钮的选中状态
-     */
+
     private void clearBottomImageState() {
         tv_course.setTextColor(Color.parseColor("#666666"));
         tv_exercises.setTextColor(Color.parseColor("#666666"));
@@ -135,13 +113,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         iv_course.setImageResource(R.drawable.main_course_icon);
         iv_exercises.setImageResource(R.drawable.main_exercises_icon);
         iv_myInfo.setImageResource(R.drawable.main_my_icon);
+        //这部分代码，目前多余
         for (int i = 0; i < mBottomLayout.getChildCount(); i++) {
             mBottomLayout.getChildAt(i).setSelected(false);
         }
     }
-    /**
-     * 设置底部按钮选中状态
-     */
+
     public void setSelectedStatus(int index) {
         switch (index) {
             case 0:
@@ -167,45 +144,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         }
     }
-    /**
-     * 移除不需要的视图
-     */
+
     private void removeAllView() {
         for (int i = 0; i < mBodyLayout.getChildCount(); i++) {
             mBodyLayout.getChildAt(i).setVisibility(View.GONE);
         }
     }
-    /**
-     * 设置界面view的初始化状态
-     */
+
     private void setInitStatus() {
         clearBottomImageState();
         setSelectedStatus(0);
         createView(0);
     }
-    /**
-     * 显示对应的页面
-     */
+
     private void selectDisplayView(int index) {
         removeAllView();
         createView(index);
         setSelectedStatus(index);
     }
-    /**
-     * 选择视图
-     */
+
     private void createView(int viewIndex) {
         switch (viewIndex) {
             case 0:
-                //课程界面
-
+                /*if (mCourseView == null) {
+                    mCourseView = new CourseView(this);
+                    mBodyLayout.addView(mCourseView.getView());
+                } else {
+                    mCourseView.getView();
+                }
+                mCourseView.showView();*/
                 break;
             case 1:
-                //习题界面
 
                 break;
             case 2:
-                //我的界面
                 if (mMyInfoView == null) {
                     mMyInfoView = new MyInfoView(this);
                     mBodyLayout.addView(mMyInfoView.getView());
@@ -252,18 +224,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return super.onKeyDown(keyCode, event);
     }
-    /**
-     * 获取SharedPreferences中的登录状态
-     */
+
     private boolean readLoginStatus() {
         SharedPreferences sp = getSharedPreferences("loginInfo",
                 Context.MODE_PRIVATE);
         boolean isLogin = sp.getBoolean("isLogin", false);
         return isLogin;
     }
-    /**
-     * 清除SharedPreferences中的登录状态
-     */
+
     private void clearLoginStatus() {
         SharedPreferences sp = getSharedPreferences("loginInfo",
                 Context.MODE_PRIVATE);

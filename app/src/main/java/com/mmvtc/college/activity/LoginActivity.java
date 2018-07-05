@@ -1,5 +1,6 @@
 package com.mmvtc.college.activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -129,8 +130,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                       Elements as = body.getElementsByTag("a");
                       for (Element a :as){
                           Local.urls.put(a.text(),a.attr("href"));
-                          Log.i(TAG, "run: "+a.text()+":"+a.attr("href"));
                       }
+                        startActivity(new Intent(LoginActivity.this,MainActivity.class));
+                        LoginActivity.this.finish();
                   }else {
                         runOnUiThread(new Runnable() {
                             @Override
