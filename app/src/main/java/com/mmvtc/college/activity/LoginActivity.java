@@ -158,6 +158,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Element body = doc.body();
                     Elements a = body.getElementsByTag("a");
                     Log.i(TAG, "run: "+body.text());
+              
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
