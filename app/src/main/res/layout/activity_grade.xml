@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_grade"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,13 +8,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.mmvtc.college.activity.GradeActivity">
-    <ImageView
-        android:id="@+id/grade"
-        android:layout_width="wrap_content"
-        android:layout_height="150dp"
-        android:src="@drawable/gradeimg"
-        android:layout_centerHorizontal="true"/>
+    android:orientation="vertical"
+    >
     <TextView
         android:id="@+id/hread"
         android:layout_width="wrap_content"
@@ -24,13 +18,117 @@
         android:textSize="20sp"
         android:layout_below="@+id/grade"
         android:text="历年成绩:"/>
+    <ImageView
+        android:id="@+id/grade"
+        android:layout_width="wrap_content"
+        android:layout_height="150dp"
+        android:src="@drawable/gradeimg"
+        android:layout_centerHorizontal="true"/>
 
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="55dp">
+    <TextView
+        android:id="@+id/tv_item1"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_weight="2"
+        android:gravity="center"
+        android:paddingRight="3dp"
+        android:text="学年"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"/>
+
+    //边框
+<!--    <TextView
+        android:layout_width="1dp"
+        android:layout_height="50dp"
+        android:background="#000"
+        />-->
+
+    <TextView
+        android:id="@+id/tv_item2"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="学期"
+        android:paddingLeft="3dp"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"/>
+<!--    <TextView
+        android:layout_width="1dp"
+        android:layout_height="50dp"
+        android:background="#000"
+        />-->
+
+    <TextView
+        android:id="@+id/tv_item3"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_weight="4"
+        android:gravity="center"
+        android:text="课程名称"
+        android:paddingLeft="3dp"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"/>
+<!--    <TextView
+        android:layout_width="1dp"
+        android:layout_height="50dp"
+        android:background="#000"
+        />-->
+
+    <TextView
+        android:id="@+id/tv_item4"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="绩点"
+        android:paddingLeft="3dp"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"/>
+<!--    <TextView
+        android:layout_width="1dp"
+        android:layout_height="50dp"
+        android:background="#000"
+        />-->
+
+<!--    <TextView
+        android:id="@+id/tv_item5"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="学分"
+        android:paddingLeft="3dp"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"/>
+    <TextView
+        android:layout_width="1dp"
+        android:layout_height="50dp"
+        android:background="#000"
+        />-->
+
+    <TextView
+        android:id="@+id/tv_item6"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="成绩"
+        android:paddingLeft="3dp"
+        android:textSize="14sp"
+        android:textColor="@android:color/black"/>
+
+</LinearLayout>
     <ListView
-        android:id="@+id/getgrade"
+        android:id="@+id/lv_grade2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/hread"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"></ListView>
+        android:layout_alignParentStart="true">
 
-</RelativeLayout>
+    </ListView>
+
+</LinearLayout>

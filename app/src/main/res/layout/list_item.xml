@@ -5,20 +5,31 @@
               android:gravity="center_vertical"
              >
 
+
+
         <TextView
             android:id="@+id/tv_item1"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_weight="1"
+            android:gravity="right|center"
+            android:paddingRight="5dp"
             android:text="dsdsd"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"/>
+            android:textSize="14sp"
+            android:textColor="@android:color/black"
+            />
+
         <TextView
             android:id="@+id/tv_item2"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:layout_weight="2"
+            android:gravity="left|center"
             android:text="sdsdsd"
-            android:textSize="18sp"
-            android:textColor="@android:color/black"/>
+            android:paddingLeft="5dp"
+            android:textSize="14sp"
+            android:textColor="@android:color/black"
+
+            />
     </LinearLayout>
+

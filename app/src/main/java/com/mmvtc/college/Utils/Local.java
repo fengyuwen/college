@@ -1,4 +1,4 @@
-package com.mmvtc.college.Utils;
+package com.mmvtc.college.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -14,6 +14,8 @@ public class Local {
     * 学校官网网址
     * */
     public static String url = "http://jwc.mmvtc.cn/";
+    public static String cookie = "";
+    public static String number = "";
     /*
      * 学校官网连接集合
      * */
@@ -60,6 +62,11 @@ public class Local {
         editor.putBoolean("isLogin",login);
         editor.putString("user",user);
         editor.commit();
+    }
+
+    public static String readUser(Context context){
+        SharedPreferences sharedPreferences = context.getSharedPreferences("loginInfo",Context.MODE_PRIVATE);
+        return sharedPreferences.getString("user","");
     }
 
 

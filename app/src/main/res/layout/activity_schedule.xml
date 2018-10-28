@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_schedule"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#35baff"
+        >
+        <TextView
+            android:gravity="center"
+            android:id="@+id/tv_monday"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="周一"
+            android:textSize="16dp"
+
+        />
+        <TextView
+            android:layout_width="1dp"
+            android:layout_height="40dp"
+            android:background="#000"
+            android:paddingTop="12dp"
+
+            />
+
+        <TextView
+            android:id="@+id/tv_tuesday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="周二"
+            android:textSize="16dp"
+
+            />
+        <TextView
+            android:layout_width="1dp"
+            android:layout_height="40dp"
+            android:background="#000"
+            android:paddingTop="12dp"
+
+            />
+        <TextView
+            android:id="@+id/tv_wednesday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="周三"
+            android:textSize="16dp"
+
+            />
+        <TextView
+            android:layout_width="1dp"
+            android:layout_height="40dp"
+            android:background="#000"
+            android:paddingTop="12dp"
+
+            />
+        <TextView
+            android:id="@+id/tv_thursday"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="周四"
+            android:textSize="16dp"
+
+            />
+        <TextView
+            android:layout_width="1dp"
+            android:layout_height="40dp"
+            android:background="#000"
+            android:paddingTop="12dp"
+
+            />
+        <TextView
+        android:id="@+id/tv_friday"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="周五"/>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/lv_schedule"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:paddingTop="3dp">
+
+    </ListView>
+</LinearLayout>

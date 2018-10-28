@@ -9,4 +9,7 @@
     <color name="bg_login">#18b4ed</color>
     <color name="tab_text_pressed">#3680da</color>
     <color name="bg_login_pressed">#40cafd</color>
+
+    <color name="tab_checked">#3F51B5</color>
+    <color name="tab_unchecked">#757575</color>
 </resources>

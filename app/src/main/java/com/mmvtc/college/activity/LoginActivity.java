@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.mmvtc.college.R;
-import com.mmvtc.college.Utils.Local;
+import com.mmvtc.college.utils.Local;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -53,10 +53,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         cbIsSave = (CheckBox) findViewById(R.id.cb_isSave);
         btnLogin.setOnClickListener(this);
         ivVertify.setOnClickListener(this);
-        Bundle userInfo= Local.getUserInfo(this);
-        if (!userInfo.get("password").equals("")&&!userInfo.get("user").equals("")){
-            etUser.setText(""+userInfo.get("user"));
-            etPasswrod.setText(""+userInfo.get("password"));
+        Bundle userInfo = Local.getUserInfo(this);
+        if (!userInfo.get("password").equals("") && !userInfo.get("user").equals("")) {
+            etUser.setText("" + userInfo.get("user"));
+            etPasswrod.setText("" + userInfo.get("password"));
         }
     }
 
@@ -71,20 +71,30 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     conn.setConnectTimeout(5000);
                     if (!cookie.isEmpty())
                         conn.setRequestProperty("Cookie", cookie);
-                    int code = conn.getResponseCode();
+                    final int code = conn.getResponseCode();
                     if (code == 200) {
                         if (cookie.isEmpty()) {
                             cookie = conn.getHeaderField("Set-Cookie");
                             Log.i(TAG, "run: " + cookie);
                             cookie = cookie.substring(0, cookie.indexOf(";"));
+                            Local.cookie = cookie;
                         }
                         InputStream is = conn.getInputStream();
-                        final Bitmap bitmap = BitmapFactory.decodeStream(is);
+                        final Bitmap bitmap = BitmapFactory.decodeStream(is).copy(Bitmap.Config.ARGB_8888,true);
                         is.close();
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                ivVertify.setImageBitmap(bitmap);
+                                
+                                    ivVertify.setImageBitmap(bitmap);
+                               
+                            }
+                        });
+                    }else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(LoginActivity.this, "错误码:"+code, Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -117,7 +127,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     login();
                     if (cbIsSave.isChecked())
                         Local.saveUserInfo(this, user, passwrod);
-                    else Local.saveUserInfo(this,"","");
+                    else Local.saveUserInfo(this, "", "");
                 }
                 break;
         }
@@ -139,14 +149,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             .timeout(3000)
                             .post();
                     Element body = doc.body();
-                    Element script = doc.getElementsByTag("script").last();
-                    final String msg = massage(script.html());
+                    final String msg = massage(doc.html());
                     if (msg.isEmpty()) {
                         Elements as = body.getElementsByTag("a");
                         for (Element a : as) {
                             Local.urls.put(a.text(), a.attr("href"));
                         }
-                        Local.loginInfo(LoginActivity.this,true,body.getElementById("xhxm").text());
+                        Local.number = user;
+                        Local.loginInfo(LoginActivity.this, true, body.getElementById("xhxm").text());
                         startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         LoginActivity.this.finish();
                     } else {
@@ -159,9 +169,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                     Log.i(TAG, "run: " + body.text() + ":" + cookie);
                     vertiftUpdate();
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
             }
         }).start();
     }
@@ -176,5 +188,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         return str;
     }
+
+
 
 }

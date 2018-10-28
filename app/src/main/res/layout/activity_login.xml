@@ -69,6 +69,7 @@
         android:layout_below="@+id/ll_vertify"
         android:layout_marginTop="10dp"
         android:text="保存账号密码"
+        android:checked="true"
         android:textColor="#666" />
 
     <Button
