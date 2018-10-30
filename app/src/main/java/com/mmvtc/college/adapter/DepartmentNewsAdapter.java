@@ -4,9 +4,10 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.mmvtc.college.App;
 import com.mmvtc.college.R;
 import com.mmvtc.college.bean.NewsBean;
 
@@ -19,12 +20,12 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2018/10/21.
  */
 
-public class CollegeNewsAdapter extends BaseAdapter {
+public class DepartmentNewsAdapter extends BaseAdapter {
 
     private Context context;
     private List<NewsBean> collegeNewsBeens;
 
-    public CollegeNewsAdapter(Context context, List<NewsBean> collegeNewsBeens) {
+    public DepartmentNewsAdapter(Context context, List<NewsBean> collegeNewsBeens) {
         this.context = context;
         this.collegeNewsBeens = collegeNewsBeens;
     }
@@ -55,33 +56,30 @@ public class CollegeNewsAdapter extends BaseAdapter {
         if (view != null) {
             holder = (ViewHolder) view.getTag();
         } else {
-            view = View.inflate(context, R.layout.college_news_item, null);
+            view = View.inflate(context, R.layout.department_news_item, null);
             holder = new ViewHolder(view);
             view.setTag(holder);
         }
 
-            holder.mLlStyle2.setVisibility(View.VISIBLE);
-            holder.mTvTime.setText(collegeNewsBeens.get(i).getTime());
-            holder.mTvEyeMeasure.setText(collegeNewsBeens.get(i).getEyeMeasure());
-            holder.mTvText.setText(collegeNewsBeens.get(i).getText());
+        holder.tvTime.setText(collegeNewsBeens.get(i).getTime());
+        holder.tvText.setText(collegeNewsBeens.get(i).getText());
+        final int i1 = i;
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(App.appContext, "" + collegeNewsBeens.get(i1).getText(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return view;
     }
 
 
     static class ViewHolder {
-        @BindView(R.id.tv_title)
-        TextView mTvTitle;
-        @BindView(R.id.tv_text)
-        TextView mTvText;
-        @BindView(R.id.ll_style1)
-        LinearLayout mLlStyle1;
         @BindView(R.id.tv_time)
-        TextView mTvTime;
-        @BindView(R.id.tv_eye_measure)
-        TextView mTvEyeMeasure;
-        @BindView(R.id.ll_style2)
-        LinearLayout mLlStyle2;
+        TextView tvTime;
+        @BindView(R.id.tv_text)
+        TextView tvText;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);

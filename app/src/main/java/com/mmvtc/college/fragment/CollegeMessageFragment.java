@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +20,7 @@ import com.mmvtc.college.GlideImageLoader;
 import com.mmvtc.college.R;
 import com.mmvtc.college.activity.NewsActivity;
 import com.mmvtc.college.adapter.CollegeNewsAdapter;
-import com.mmvtc.college.bean.CollegeNewsBean;
+import com.mmvtc.college.bean.NewsBean;
 import com.youth.banner.Banner;
 
 import org.jsoup.Jsoup;
@@ -31,30 +30,23 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-/**
- * Created by bruce on 2016/11/1.
- * BaseFragment
- */
+
 
 
 public class CollegeMessageFragment extends Fragment implements AdapterView.OnItemClickListener {
 
-    @BindView(R.id.banner)
+   @BindView(R.id.banner)
     Banner mBanner;
-    private List<CollegeNewsBean> collegeNewsBeansItem2;
-    private List<CollegeNewsBean> collegeNewsBeansItem1;
+    private List<NewsBean> collegeNewsBeansItem2;
+    private List<NewsBean> collegeNewsBeansItem1;
     private List<String> images;
     private CollegeNewsAdapter mCollegeNewsAdapter;
-    private int logoIndex = 0;
-    Timer timer;
     private static final String TAG = "BaseFragment";
 
     @BindView(R.id.btn_news1)
@@ -66,7 +58,6 @@ public class CollegeMessageFragment extends Fragment implements AdapterView.OnIt
     @BindView(R.id.activity_college_massage)
     LinearLayout activityCollegeMassage;
 
-    Thread thread;
     Unbinder unbinder;
 
 
@@ -92,6 +83,7 @@ public class CollegeMessageFragment extends Fragment implements AdapterView.OnIt
         mCollegeNewsAdapter = new CollegeNewsAdapter(App.appContext, collegeNewsBeansItem2);
         lvContent.setAdapter(mCollegeNewsAdapter);
         lvContent.setOnItemClickListener(this);
+
     }
 
     Handler handler = new Handler() {
@@ -109,55 +101,13 @@ public class CollegeMessageFragment extends Fragment implements AdapterView.OnIt
         }
     };
 
-    /*
-     * 轮播时间
-     * */
-    /*Handler logo = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            Glide.with(CollegeMessageFragment.this).load(images.get(msg.what)).diskCacheStrategy(DiskCacheStrategy.ALL).into(ivLogo);
-        }
-    };*/
-    TimerTask timerTask;
-
     public void logoStart() {
-       /* timer = new Timer();
-         timerTask = new TimerTask() {
-            @Override
-            public void run() {
-
-                logo.sendEmptyMessage(logoIndex);
-                logoIndex=++logoIndex%images.size();
-                Log.i(TAG, "run: "+logoIndex);
-
-              //  if (++logoIndex==images.size()) logoIndex=0;
-            }
-        };
-        timer.schedule(timerTask,1000,3000);//延时1s，每隔3000毫秒执行一次run方法
-      */
-
-       /*  thread=new Thread(timer2);
-        thread.start();*/
         mBanner.setImageLoader(new GlideImageLoader());
         //设置图片集合
         mBanner.setImages(images);
         //banner设置方法全部调用完毕时最后调用
         mBanner.start();
     }
-    /*Runnable timer2=new Runnable() {
-        @Override
-        public void run() {
-            while (true) {
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                logo.sendEmptyMessage(logoIndex);
-                logoIndex = ++logoIndex % images.size();
-            }
-        }
-    };*/
 
     private void initData() {
         new Thread(new Runnable() {
@@ -177,9 +127,8 @@ public class CollegeMessageFragment extends Fragment implements AdapterView.OnIt
                         images.add("http://www.mmvtc.cn/templet/default/" + img.attr("src"));
                     }
 
-
                     Elements news = body.getElementsByClass("news");
-                    CollegeNewsBean collegeNewsBean;
+                    NewsBean collegeNewsBean;
                     for (Element e : news) {
                         //获取新闻分类标题
                         String title = e.getElementsByClass("title").text();
@@ -198,7 +147,7 @@ public class CollegeMessageFragment extends Fragment implements AdapterView.OnIt
                             String text = li.getElementsByTag("a").first().text();
                             String textValue = li.getElementsByTag("a").first().attr("href");
                             //创建学院新闻类
-                            collegeNewsBean = new CollegeNewsBean();
+                            collegeNewsBean = new NewsBean();
                             collegeNewsBean.setTitle(title);
                             //通过TitleValue是否存在，识别是否新闻信息
                             collegeNewsBean.setTitleValue(titleValue);
@@ -238,24 +187,6 @@ public class CollegeMessageFragment extends Fragment implements AdapterView.OnIt
         unbinder.unbind();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        Log.i(TAG, "onStart: ");
-        timer = null;
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.i(TAG, "onPause: ");
-       /* try {
-            thread.wait();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }*/
-        //timerTask.cancel();
-    }
 
     @OnClick({R.id.btn_news1, R.id.btn_news2})
     public void onViewClicked(View view) {

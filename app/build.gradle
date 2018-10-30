@@ -29,9 +29,9 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile files('libs/jsoup-1.11.3.jar')
     compile files('libs/glide-3.6.1.jar')
-    
-    compile'com.android.support:design:25.0.1'
+    compile 'com.android.support:design:25.0.1'
     compile 'com.jakewharton:butterknife:8.4.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'com.youth.banner:banner:1.4.10'
+    compile project(':magicindicator')
 }

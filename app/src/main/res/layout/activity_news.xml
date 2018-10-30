@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context="com.mmvtc.college.activity.NewsActivity"
     android:orientation="vertical">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
     <TextView
         android:id="@+id/tv_title"
         android:layout_width="match_parent"
@@ -30,5 +41,6 @@
         android:textSize="18sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

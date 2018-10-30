@@ -14,7 +14,7 @@ import com.mmvtc.college.adapter.ViewPagerAdapter;
 import com.mmvtc.college.fragment.BaseFragment;
 import com.mmvtc.college.fragment.CollegeMessageFragment;
 import com.mmvtc.college.fragment.MyFragment;
-import com.mmvtc.college.fragment.XiBuFragment;
+import com.mmvtc.college.fragment.DepartmentFragment;
 
 /**
  * Created by bruce on 2016/11/1.
@@ -105,7 +105,7 @@ public class HomeActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         BaseFragment baseFragment =BaseFragment.newInstance();
         adapter.addFragment(collegeMessageFragment);
-        adapter.addFragment(XiBuFragment.newInstance());
+        adapter.addFragment(DepartmentFragment.newInstance());
         adapter.addFragment(BaseFragment.newInstance());
         adapter.addFragment(MyFragment.newInstance());
 

@@ -4,7 +4,7 @@ package com.mmvtc.college.bean;
  * Created by Administrator on 2018/10/21.
  */
 
-public class CollegeNewsBean {
+public class NewsBean {
     private String title;
     private String titleValue;
     private String time;

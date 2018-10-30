@@ -11,9 +11,7 @@ import com.mmvtc.college.R;
 
 import java.util.List;
 
-/**
- * Created by Administrator on 2018/7/9.
- */
+
 
 public class ScheduleAdapter extends BaseAdapter {
 
