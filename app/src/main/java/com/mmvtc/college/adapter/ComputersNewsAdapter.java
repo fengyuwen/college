@@ -20,12 +20,12 @@ import butterknife.ButterKnife;
  * Created by Administrator on 2018/10/21.
  */
 
-public class DepartmentNewsAdapter extends BaseAdapter {
+public class ComputersNewsAdapter extends BaseAdapter {
 
     private Context context;
     private List<NewsBean> collegeNewsBeens;
 
-    public DepartmentNewsAdapter(Context context, List<NewsBean> collegeNewsBeens) {
+    public ComputersNewsAdapter(Context context, List<NewsBean> collegeNewsBeens) {
         this.context = context;
         this.collegeNewsBeens = collegeNewsBeens;
     }
@@ -56,7 +56,7 @@ public class DepartmentNewsAdapter extends BaseAdapter {
         if (view != null) {
             holder = (ViewHolder) view.getTag();
         } else {
-            view = View.inflate(context, R.layout.department_news_item, null);
+            view = View.inflate(context, R.layout.computers_news_item, null);
             holder = new ViewHolder(view);
             view.setTag(holder);
         }

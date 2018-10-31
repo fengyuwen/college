@@ -11,10 +11,10 @@ import android.view.WindowManager;
 import com.mmvtc.college.BottomNavigationViewHelper;
 import com.mmvtc.college.R;
 import com.mmvtc.college.adapter.ViewPagerAdapter;
-import com.mmvtc.college.fragment.BaseFragment;
+import com.mmvtc.college.fragment.BuildingFragment;
 import com.mmvtc.college.fragment.CollegeMessageFragment;
+import com.mmvtc.college.fragment.ComputersFragment;
 import com.mmvtc.college.fragment.MyFragment;
-import com.mmvtc.college.fragment.DepartmentFragment;
 
 /**
  * Created by bruce on 2016/11/1.
@@ -26,7 +26,6 @@ public class HomeActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private MenuItem menuItem;
     private BottomNavigationView bottomNavigationView;
-    private CollegeMessageFragment collegeMessageFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +37,6 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void init() {
-        collegeMessageFragment=CollegeMessageFragment.newInstance();
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         //添加页面缓存页，防止页面丢失数据
         viewPager.setOffscreenPageLimit(4);
@@ -103,10 +101,9 @@ public class HomeActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        BaseFragment baseFragment =BaseFragment.newInstance();
-        adapter.addFragment(collegeMessageFragment);
-        adapter.addFragment(DepartmentFragment.newInstance());
-        adapter.addFragment(BaseFragment.newInstance());
+        adapter.addFragment(CollegeMessageFragment.newInstance());
+        adapter.addFragment(ComputersFragment.newInstance());
+        adapter.addFragment(BuildingFragment.newInstance());
         adapter.addFragment(MyFragment.newInstance());
 
         viewPager.setAdapter(adapter);

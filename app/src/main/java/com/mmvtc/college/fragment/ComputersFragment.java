@@ -9,7 +9,6 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +17,7 @@ import android.widget.LinearLayout;
 import com.mmvtc.college.App;
 import com.mmvtc.college.GlideImageLoader;
 import com.mmvtc.college.R;
-import com.mmvtc.college.adapter.ExamplePagerAdapter;
+import com.mmvtc.college.adapter.ComputersPagerAdapter;
 import com.mmvtc.college.bean.NewsBean;
 import com.youth.banner.Banner;
 
@@ -48,7 +47,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 
-public class DepartmentFragment extends Fragment {
+public class ComputersFragment extends Fragment {
 
     @BindView(R.id.banner)
     Banner mBanner;
@@ -62,9 +61,9 @@ public class DepartmentFragment extends Fragment {
 
     private static final String TAG = "BaseFragment";
     //标题栏
-    private static final String[] CHANNELS = new String[]{"系部新闻", "公告通知", "招生就业", "技能竞赛", "教学科研"};
+    private static final String[] CHANNELS = new String[]{"系部新闻", "公告通知", "招生就业", "技能竞赛", "教学科研","系部概况"};
     private List<String> mDataList = Arrays.asList(CHANNELS);
-    private ExamplePagerAdapter mExamplePagerAdapter;
+    private ComputersPagerAdapter mExamplePagerAdapter;
 
 
     @BindView(R.id.activity_college_massage)
@@ -73,15 +72,15 @@ public class DepartmentFragment extends Fragment {
     Unbinder unbinder;
 
 
-    public static DepartmentFragment newInstance() {
-        DepartmentFragment fragment = new DepartmentFragment();
+    public static ComputersFragment newInstance() {
+        ComputersFragment fragment = new ComputersFragment();
         return fragment;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_department, null);
+        View view = inflater.inflate(R.layout.fragment_computers, null);
         unbinder = ButterKnife.bind(this, view);
         init();
         initData();
@@ -93,8 +92,7 @@ public class DepartmentFragment extends Fragment {
     private void init() {
         NewsBeansList = new ArrayList<>();
         images = new ArrayList<>();
-        mExamplePagerAdapter = new ExamplePagerAdapter(mDataList);
-
+        mExamplePagerAdapter = new ComputersPagerAdapter(mDataList);
         viewPager.setAdapter(mExamplePagerAdapter);
     }
 
@@ -119,7 +117,6 @@ public class DepartmentFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         viewPager.setCurrentItem(index);
-                        Log.i(TAG, "onClick: " + index);
                     }
                 });
                 badgePagerTitleView.setInnerPagerTitleView(simplePagerTitleView);
@@ -152,9 +149,9 @@ public class DepartmentFragment extends Fragment {
             switch (msg.what) {
                 case 1:
                     mExamplePagerAdapter.setData(NewsBeansList);
+                    logoStart();
                     break;
             }
-            logoStart();
         }
     };
 
@@ -208,9 +205,11 @@ public class DepartmentFragment extends Fragment {
                             .timeout(3000)
                             .post();
                     addNewsList(doc,4);
-
-
-
+                    //获得系部概况
+                    doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/ShowClass.jsp?id=1214")
+                            .timeout(3000)
+                            .post();
+                    addNewsList(doc,5);
 
                     handler.sendEmptyMessage(1);
                 } catch (Exception e) {
