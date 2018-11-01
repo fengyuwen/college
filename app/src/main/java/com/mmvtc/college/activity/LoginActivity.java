@@ -1,6 +1,5 @@
 package com.mmvtc.college.activity;
 
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -157,8 +156,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         }
                         Local.number = user;
                         Local.loginInfo(LoginActivity.this, true, body.getElementById("xhxm").text());
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+
+                        setResult(200);
+                        // startActivity(new Intent(LoginActivity.this, MainActivity.class));
                         LoginActivity.this.finish();
+
                     } else {
                         runOnUiThread(new Runnable() {
                             @Override

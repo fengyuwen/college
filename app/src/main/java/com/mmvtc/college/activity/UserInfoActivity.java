@@ -1,6 +1,5 @@
 package com.mmvtc.college.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -10,8 +9,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.mmvtc.college.bean.UserInfoBean;
 import com.mmvtc.college.R;
+import com.mmvtc.college.bean.UserInfoBean;
 import com.mmvtc.college.utils.Local;
 
 import org.jsoup.Jsoup;
@@ -109,7 +108,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View view) {
-        startActivity(new Intent(this,MainActivity.class));
+       // startActivity(new Intent(this,MainActivity.class));
         finish();
     }
 

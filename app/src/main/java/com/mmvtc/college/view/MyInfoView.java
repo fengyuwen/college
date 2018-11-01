@@ -93,35 +93,35 @@ public class MyInfoView implements View.OnClickListener {
     }
 
     public void updateHeadIcon(){
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        URL url = new URL(Local.url+headIconUrl);
-                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                        conn.setRequestMethod("GET");
-                        conn.setConnectTimeout(5000);
-                        if (!cookie.isEmpty())
-                            conn.setRequestProperty("Cookie", cookie);
-                        final int code = conn.getResponseCode();
-                        if (code == 200) {
-                            InputStream is = conn.getInputStream();
-                            final Bitmap bitmap = BitmapFactory.decodeStream(is);
-                            is.close();
-                            mContext.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    iv_head_icon.setImageBitmap(bitmap);
-                                }
-                            });
-                        }
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL(Local.url+headIconUrl);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("GET");
+                    conn.setConnectTimeout(5000);
+                    if (!cookie.isEmpty())
+                        conn.setRequestProperty("Cookie", cookie);
+                    final int code = conn.getResponseCode();
+                    if (code == 200) {
+                        InputStream is = conn.getInputStream();
+                        final Bitmap bitmap = BitmapFactory.decodeStream(is);
+                        is.close();
+                        mContext.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                iv_head_icon.setImageBitmap(bitmap);
+                            }
+                        });
                     }
 
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-            }).start();
+
+            }
+        }).start();
     }
 
     @Override

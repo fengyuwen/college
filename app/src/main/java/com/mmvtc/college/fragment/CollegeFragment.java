@@ -12,12 +12,14 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 import com.mmvtc.college.App;
 import com.mmvtc.college.GlideImageLoader;
 import com.mmvtc.college.R;
-import com.mmvtc.college.adapter.ComputersPagerAdapter;
+import com.mmvtc.college.adapter.CollegePagerAdapter;
 import com.mmvtc.college.bean.NewsBean;
 import com.youth.banner.Banner;
 
@@ -47,7 +49,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 
-public class ComputersFragment extends Fragment {
+public class CollegeFragment extends Fragment{
 
     @BindView(R.id.banner)
     Banner mBanner;
@@ -55,29 +57,36 @@ public class ComputersFragment extends Fragment {
     MagicIndicator magicIndicator;
     @BindView(R.id.view_pager)
     ViewPager viewPager;
+    @BindView(R.id.btn_news1)
+    Button btnNews1;
+    @BindView(R.id.btn_news2)
+    Button btnNews2;
+    @BindView(R.id.lv_content)
+    ListView lvContent;
+    @BindView(R.id.activity_college_massage)
+    LinearLayout activityCollegeMassage;
 
-    private List<List<NewsBean>> newsBeansList;
+
     private List<String> images;
-
     private static final String TAG = "BaseFragment";
+    private List<List<NewsBean>> newsBeansList;
     //标题栏
-    private static final String[] CHANNELS = new String[]{"系部新闻", "公告通知", "招生就业", "技能竞赛", "教学科研","系部概况"};
+    private static final String[] CHANNELS = new String[]{"学院新闻", "通知公告","系部动态"};
     private List<String> mDataList = Arrays.asList(CHANNELS);
-    private ComputersPagerAdapter mExamplePagerAdapter;
-
+    private CollegePagerAdapter collegePagerAdapter;
 
     Unbinder unbinder;
 
 
-    public static ComputersFragment newInstance() {
-        ComputersFragment fragment = new ComputersFragment();
+    public static CollegeFragment newInstance() {
+        CollegeFragment fragment = new CollegeFragment();
         return fragment;
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_computers, null);
+        View view = inflater.inflate(R.layout.fragment_college, null);
         unbinder = ButterKnife.bind(this, view);
         init();
         initData();
@@ -85,14 +94,12 @@ public class ComputersFragment extends Fragment {
         return view;
     }
 
-
     private void init() {
-        newsBeansList = new ArrayList<>();
         images = new ArrayList<>();
-        mExamplePagerAdapter = new ComputersPagerAdapter(mDataList);
-        viewPager.setAdapter(mExamplePagerAdapter);
+        newsBeansList = new ArrayList<>();
+        collegePagerAdapter = new CollegePagerAdapter(mDataList);
+        viewPager.setAdapter(collegePagerAdapter);
     }
-
     private void initMagicIndicator() {
         CommonNavigator commonNavigator = new CommonNavigator(App.appContext);
         commonNavigator.setAdapter(new CommonNavigatorAdapter() {
@@ -139,27 +146,26 @@ public class ComputersFragment extends Fragment {
         });
         ViewPagerHelper.bind(magicIndicator, viewPager);
     }
-
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
-                    mExamplePagerAdapter.setData(newsBeansList);
+                    collegePagerAdapter.setData(newsBeansList);
                     logoStart();
                     break;
+
             }
+            logoStart();
         }
     };
 
     public void logoStart() {
-        //轮播图片
+        //轮播
         mBanner.setImageLoader(new GlideImageLoader());
         mBanner.setImages(images);
         mBanner.start();
     }
-
-
     private void initData() {
         new Thread(new Runnable() {
             @Override
@@ -169,44 +175,30 @@ public class ComputersFragment extends Fragment {
                     images.clear();
                     newsBeansList.clear();
                     //获取轮播数据
-                    Document doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/indexCope.jsp")
+                    Document doc = Jsoup.connect("http://www.mmvtc.cn/templet/default/index.jsp")
                             .timeout(3000)
                             .post();
-                    Element logo = doc.body().getElementsByClass("orbit").first();
-
+                    Element body = doc.body();
+                    Element logo = body.getElementById("owl-demo");
                     for (Element img : logo.getElementsByTag("img")) {
-                        images.add("http://www.mmvtc.cn" + img.attr("src"));
+                        images.add("http://www.mmvtc.cn/templet/default/" + img.attr("src"));
                     }
+
                     //获得系部新闻
-                    doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/ShowClass.jsp?id=1212")
+                    doc = Jsoup.connect("http://www.mmvtc.cn/templet/default/ShowClassPage.jsp?id=915")
                             .timeout(3000)
                             .post();
                     addNewsList(doc,0);
-                    //获得公告通知
-                    doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/ShowClass.jsp?id=1221")
+                    //获得通知公告
+                    doc = Jsoup.connect("http://www.mmvtc.cn/templet/default/ShowClassPage.jsp?id=914")
                             .timeout(3000)
                             .post();
                     addNewsList(doc,1);
-                    //获得招生就业
-                    doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/ShowClass.jsp?id=1220")
+                    //获得系部动态
+                    doc = Jsoup.connect("http://www.mmvtc.cn/templet/default/ShowClassPage.jsp?id=1961")
                             .timeout(3000)
                             .post();
                     addNewsList(doc,2);
-                    //获得技能竞赛
-                    doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/ShowClass.jsp?id=2781")
-                            .timeout(3000)
-                            .post();
-                    addNewsList(doc,3);
-                    //获得教学科研
-                    doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/ShowClass.jsp?id=1216")
-                            .timeout(3000)
-                            .post();
-                    addNewsList(doc,4);
-                    //获得系部概况
-                    doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/ShowClass.jsp?id=1214")
-                            .timeout(3000)
-                            .post();
-                    addNewsList(doc,5);
 
                     handler.sendEmptyMessage(1);
                 } catch (Exception e) {
@@ -217,7 +209,7 @@ public class ComputersFragment extends Fragment {
 
     }
     public void addNewsList(Document doc,int i){
-        Elements lis = doc.body().getElementsByClass("cbox").first().getElementsByTag("li");
+        Elements lis = doc.body().select("ul.list-unstyled").get(1).getElementsByTag("li");
         List<NewsBean> list = new ArrayList<>();
         NewsBean newsBean;
         for (Element li : lis) {
@@ -225,11 +217,13 @@ public class ComputersFragment extends Fragment {
             String title = CHANNELS[i];
             String text = li.getElementsByTag("a").first().text();
             String textValue = li.getElementsByTag("a").first().attr("href");
-            String time = li.getElementsByTag("span").first().text();
+            String time = li.getElementsByTag("time").first().text();
+            String eye = li.getElementsByTag("span").first().text();
             newsBean.setTitle(title);
             newsBean.setText(text);
             newsBean.setTextValue(textValue);
             newsBean.setTime(time);
+            newsBean.setEyeMeasure(eye);
             list.add(newsBean);
         }
         newsBeansList.add(list);
