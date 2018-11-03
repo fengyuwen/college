@@ -82,7 +82,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
-        startActivity(new Intent(this,SplashActivity.class));
+        //startActivity(new Intent(this,SplashActivity.class));
         init();
     }
 

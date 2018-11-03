@@ -12,20 +12,20 @@
         android:label="茂职校园"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.LoginActivity"></activity>
-        <activity android:name=".activity.UserInfoActivity" />
-        <activity android:name=".activity.ModifyPsw" />
-        <activity android:name=".activity.SplashActivity" />
-        <activity android:name=".activity.NewsActivity"></activity>
-        <activity android:name=".activity.HomeActivity">
+        <activity android:name=".activity.LoginActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.UserInfoActivity" android:screenOrientation="portrait" />
+        <activity android:name=".activity.ModifyPsw" android:screenOrientation="portrait" />
+        <activity android:name=".activity.SplashActivity" android:screenOrientation="portrait" />
+        <activity android:name=".activity.NewsActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.HomeActivity" android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.GradeActivity"></activity>
-        <activity android:name=".activity.CourseActivity"></activity>
+        <activity android:name=".activity.GradeActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".activity.CourseActivity" android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
