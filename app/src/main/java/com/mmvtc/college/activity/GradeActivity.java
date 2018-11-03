@@ -1,15 +1,15 @@
-package com.mmvtc.college.view;
+package com.mmvtc.college.activity;
 
-import android.app.Activity;
-import android.view.LayoutInflater;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.mmvtc.college.bean.GradeBean;
 import com.mmvtc.college.R;
+import com.mmvtc.college.bean.GradeBean;
 import com.mmvtc.college.utils.Local;
 
 import org.jsoup.Jsoup;
@@ -20,14 +20,23 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-public class GradeView {
-    private ListView mListView;
-     private MyyBaseAdapter myAdapter;
-    private Activity mContext;
-    private LayoutInflater mInflater;
-    private View mCurrentView;
-    private List<GradeBean> scores;
 
+public class GradeActivity extends AppCompatActivity {
+    private ListView mListView;
+    private MyyBaseAdapter myAdapter;
+
+    private List<GradeBean> scores;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_grade);
+        scores = new ArrayList();
+        //mInflater.inflate();
+        mListView = (ListView) findViewById(R.id.lv_grade2);
+        myAdapter = new MyyBaseAdapter();
+        mListView.setAdapter(myAdapter);
+        initData();
+    }
     private void initData() {
         //创建一个子线程
         new  Thread(new Runnable() {
@@ -112,8 +121,8 @@ public class GradeView {
                     }
 
                     Collections.reverse(scores);
-  //返回主线程，更新列表
-                    mContext.runOnUiThread(new Runnable() {
+                    //返回主线程，更新列表
+                    runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             myAdapter.notifyDataSetChanged();
@@ -128,49 +137,7 @@ public class GradeView {
         }).start();
 
     }
-
-    public GradeView(Activity context) {
-        mContext = context;
-    }
-    private  void createView() {
-        initView();
-    }
-
-/**
-     * 获取界面控件
-     */
-
-    private void initView() {
-        //设置布局文件
-        scores = new ArrayList();
-        mCurrentView = View.inflate(mContext,R.layout.activity_grade, null);
-        //mInflater.inflate();
-        mListView = (ListView) mCurrentView.findViewById(R.id.lv_grade2);
-        myAdapter = new MyyBaseAdapter();
-        mListView.setAdapter(myAdapter);
-        initData();
-    }
-
-    public View getView() {
-        if (mCurrentView == null) {
-            createView();
-        }
-        return mCurrentView;
-    }
-
-/**
-     * 显示当前导航栏上方所对应的view界面
-     */
-
-    public void showView(){
-        if(mCurrentView == null){
-            createView();
-        }
-        mCurrentView.setVisibility(View.VISIBLE);
-    }
-
-
-private class MyyBaseAdapter extends BaseAdapter {
+    private class MyyBaseAdapter extends BaseAdapter {
         //得到item的总数
         @Override
         public int getCount() {
@@ -190,7 +157,7 @@ private class MyyBaseAdapter extends BaseAdapter {
         @Override
         //与set_grade布局文件连接，获取listview，并把数据填入到相应的位置上
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view = View.inflate(mContext,R.layout.grade,null);
+            View view = View.inflate(GradeActivity.this,R.layout.grade,null);
             TextView mTextView1 = (TextView) view.findViewById(R.id.tv_item1);
             TextView mTextView2 = (TextView) view.findViewById(R.id.tv_item2);
             TextView mTextView3 = (TextView) view.findViewById(R.id.tv_item3);
@@ -206,6 +173,4 @@ private class MyyBaseAdapter extends BaseAdapter {
             return view;
         }
     }
-
-
 }

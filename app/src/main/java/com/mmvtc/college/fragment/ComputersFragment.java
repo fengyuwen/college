@@ -9,16 +9,19 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.mmvtc.college.App;
-import com.mmvtc.college.GlideImageLoader;
 import com.mmvtc.college.R;
 import com.mmvtc.college.adapter.ComputersPagerAdapter;
 import com.mmvtc.college.bean.NewsBean;
+import com.mmvtc.college.utils.GlideImageLoader;
+import com.mmvtc.college.view.UpdateData;
 import com.youth.banner.Banner;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
@@ -47,7 +50,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 
-public class ComputersFragment extends Fragment {
+public class ComputersFragment extends Fragment implements UpdateData {
 
     @BindView(R.id.banner)
     Banner mBanner;
@@ -148,6 +151,9 @@ public class ComputersFragment extends Fragment {
                     mExamplePagerAdapter.setData(newsBeansList);
                     logoStart();
                     break;
+                case 2:
+                    Toast.makeText(App.appContext, "网络请求超时，请检查网络后重试", Toast.LENGTH_SHORT).show();
+                    break;
             }
         }
     };
@@ -168,9 +174,10 @@ public class ComputersFragment extends Fragment {
                     //清除上次获取数据
                     images.clear();
                     newsBeansList.clear();
+                    int timeout=8000;
                     //获取轮播数据
                     Document doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/indexCope.jsp")
-                            .timeout(3000)
+                            .timeout(timeout)
                             .post();
                     Element logo = doc.body().getElementsByClass("orbit").first();
 
@@ -179,37 +186,38 @@ public class ComputersFragment extends Fragment {
                     }
                     //获得系部新闻
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/ShowClass.jsp?id=1212")
-                            .timeout(3000)
+                            .timeout(timeout)
                             .post();
                     addNewsList(doc,0);
                     //获得公告通知
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/ShowClass.jsp?id=1221")
-                            .timeout(3000)
+                            .timeout(timeout)
                             .post();
                     addNewsList(doc,1);
                     //获得招生就业
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/ShowClass.jsp?id=1220")
-                            .timeout(3000)
+                            .timeout(timeout)
                             .post();
                     addNewsList(doc,2);
                     //获得技能竞赛
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/ShowClass.jsp?id=2781")
-                            .timeout(3000)
+                            .timeout(timeout)
                             .post();
                     addNewsList(doc,3);
                     //获得教学科研
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/ShowClass.jsp?id=1216")
-                            .timeout(3000)
+                            .timeout(timeout)
                             .post();
                     addNewsList(doc,4);
                     //获得系部概况
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/ShowClass.jsp?id=1214")
-                            .timeout(3000)
+                            .timeout(timeout)
                             .post();
                     addNewsList(doc,5);
 
                     handler.sendEmptyMessage(1);
                 } catch (Exception e) {
+                    handler.sendEmptyMessage(2);
                     e.printStackTrace();
                 }
             }
@@ -241,5 +249,11 @@ public class ComputersFragment extends Fragment {
         unbinder.unbind();
     }
 
-
+    @Override
+    public void updateData() {
+        if (images.size()==0||newsBeansList.size()==0){
+            initData();
+        }
+        Log.i(TAG, "updateData: "+TAG);
+    }
 }

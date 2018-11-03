@@ -1,8 +1,6 @@
 package com.mmvtc.college.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -11,6 +9,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
@@ -33,6 +32,7 @@ import com.mmvtc.college.utils.Local;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -43,6 +43,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.content.ContentValues.TAG;
 import static com.mmvtc.college.utils.Local.cookie;
 
 
@@ -71,6 +72,9 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     private BottomNavigationView bottomNavigationView;
     private boolean isLogin = false;
     private String headIconUrl;
+    private CollegeFragment collegeFragment;
+    private BuildingFragment buildingFragment;
+    private ComputersFragment computersFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +82,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
-
+        startActivity(new Intent(this,SplashActivity.class));
         init();
     }
 
@@ -86,12 +90,13 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         tvMainTitle.setText("茂名职业技术学院");
 
         ArrayList<ItemBean> menuLists = new ArrayList<ItemBean>();
-        menuLists.add(new ItemBean(R.mipmap.app, "学院简介"));
+        menuLists.add(new ItemBean(R.drawable.college, "学院简介"));
+        menuLists.add(new ItemBean(R.drawable.college, "校园风光"));
         menuLists.add(new ItemBean(R.drawable.main_course_icon_selected, "成绩查询"));
         menuLists.add(new ItemBean(R.drawable.main_exercises_icon_selected, "课程表"));
-        menuLists.add(new ItemBean(R.drawable.main_exercises_icon_selected, "周程表"));
-        menuLists.add(new ItemBean(R.drawable.myinfo_setting_icon, "设置"));
-        menuLists.add(new ItemBean(R.mipmap.app, "退出登录"));
+        menuLists.add(new ItemBean(R.drawable.zhou, "周程表"));
+        menuLists.add(new ItemBean(R.drawable.myinfo_setting_icon, "修改密码"));
+        menuLists.add(new ItemBean(R.drawable.exit, "退出登录"));
         HomeAdapter myAdapter = new HomeAdapter<ItemBean>(menuLists, R.layout.item_list) {
             @Override
             public void bindView(ViewHolder holder, ItemBean obj) {
@@ -129,14 +134,17 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                             case R.id.item_news:
                                 viewPager.setCurrentItem(0);
                                 tvMainTitle.setText("茂名职业技术学院");
+                                //collegeFragment.updateData();
                                 break;
                             case R.id.item_lib:
                                 viewPager.setCurrentItem(1);
                                 tvMainTitle.setText("计算机工程系");
+                                //computersFragment.updateData();
                                 break;
                             case R.id.item_find:
                                 viewPager.setCurrentItem(2);
                                 tvMainTitle.setText("土木系");
+                               // buildingFragment.updateData();
                                 break;
                         }
                         return false;
@@ -162,12 +170,15 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                 switch (position) {
                     case 0:
                         tvMainTitle.setText("茂名职业技术学院");
+                        //collegeFragment.updateData();
                         break;
                     case 1:
                         tvMainTitle.setText("计算机工程系");
+                       // computersFragment.updateData();
                         break;
                     case 2:
                         tvMainTitle.setText("土木系");
+                      //  buildingFragment.updateData();
                         break;
                 }
             }
@@ -193,7 +204,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == 200) {
             isLogin = true;
-            tvUserName.setText(readLoginStatus());
+            tvUserName.setText(Local.readUser(this));
             setLogin();
         }
     }
@@ -256,34 +267,88 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     }
 
 
-    /**
-     * 从SharedPreferences中读取用户名
-     */
-    private String readLoginStatus() {
-        SharedPreferences sp = getSharedPreferences("loginInfo", Context.MODE_PRIVATE);
-        String userName = sp.getString("user", "");
-        return userName;
-    }
-
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(CollegeFragment.newInstance());
-        adapter.addFragment(ComputersFragment.newInstance());
-        adapter.addFragment(BuildingFragment.newInstance());
+        collegeFragment = CollegeFragment.newInstance();
+        computersFragment = ComputersFragment.newInstance();
+        buildingFragment = BuildingFragment.newInstance();
+        adapter.addFragment(collegeFragment);
+        adapter.addFragment(computersFragment);
+        adapter.addFragment(buildingFragment);
         viewPager.setAdapter(adapter);
     }
 
+    //侧边栏监听
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
         if (isLogin)
             switch (i) {
+                case 0:
+                    startActivity(new Intent(this, ModifyPsw.class));
+                    break;
+                case 1:
+                    startActivity(new Intent(this, ModifyPsw.class));
+                    break;
+                case 2:
+                    startActivity(new Intent(this, GradeActivity.class));
+                    break;
+                case 3:
+                    startActivity(new Intent(this, CourseActivity.class));
+                    break;
                 case 4:
-                    Toast.makeText(this, "4!", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(this, ModifyPsw.class));
+                    break;
+                case 5:
+                    startActivity(new Intent(this, ModifyPsw.class));
+                    break;
+                case 6:
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Document doc = Jsoup.connect("http://jwc.mmvtc.cn/xs_main.aspx?xh=" + Local.number)
+                                        .cookie("ASP.NET_SessionId", cookie.substring(cookie.indexOf("=") + 1, cookie.length()))
+                                        .referrer("http://jwc.mmvtc.cn/xs_main.aspx?xh=" + Local.number)
+                                        .timeout(3000)
+                                        .get();
+                                Elements inputs = doc.getElementsByTag("input");
+                                String viewState = "";
+                                for (Element e : inputs) {
+                                    String view = e.attr("name");
+                                    if (view.equals("__VIEWSTATE")) {
+                                        viewState = e.attr("value");
+                                    }
+                                }
+                                Document doc2 = Jsoup.connect("http://jwc.mmvtc.cn/xs_main.aspx?xh=" + Local.number)
+                                        .cookie("ASP.NET_SessionId", cookie.substring(cookie.indexOf("=") + 1, cookie.length()))
+                                        .data("__EVENTTARGET", "likTc")
+                                        .data("__EVENTARGUMENT", "")
+                                        .data("__VIEWSTATE", viewState)
+                                        .referrer("http://jwc.mmvtc.cn/xs_main.aspx?xh=" + Local.number)
+                                        .timeout(3000)
+                                        .post();
+                                Log.i(TAG, "run: " + doc2.html());
+
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        isLogin = false;
+                                        ivHeadIcon.setImageResource(R.drawable.logo);
+                                        tvUserName.setText("");
+                                    }
+                                });
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            // startActivity(new Intent(HomeActivity.this, LoginActivity.class));
+                        }
+                    }).start();
                     break;
             }
         else Toast.makeText(this, "请先登录!", Toast.LENGTH_SHORT).show();
     }
 
+    //左上角按钮打开侧边栏
     @OnClick(R.id.tv_back)
     public void onViewClicked() {
         drawerLayout.openDrawer(llRight);

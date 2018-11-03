@@ -10,7 +10,7 @@
         android:layout_height="50dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/heade" >
+        android:background="@drawable/person_head" >
 
         <Button
             android:id="@+id/btn_ret"
@@ -37,7 +37,7 @@
         android:id="@+id/lv_info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_body">
+        android:background="@drawable/person_body">
 
     </ListView>
 </LinearLayout>

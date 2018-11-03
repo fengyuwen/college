@@ -1,4 +1,4 @@
-package com.mmvtc.college;
+package com.mmvtc.college.utils;
 
 import android.content.Context;
 import android.widget.ImageView;
@@ -12,7 +12,6 @@ public class GlideImageLoader extends ImageLoader {
     public void displayImage(Context context, Object path, ImageView imageView) {
 
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-        //Glide 加载图片简单用法
         Glide.with(context).load(path).into(imageView);
 
     }

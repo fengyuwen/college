@@ -9,6 +9,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,10 +18,11 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.mmvtc.college.App;
-import com.mmvtc.college.GlideImageLoader;
+import com.mmvtc.college.utils.GlideImageLoader;
 import com.mmvtc.college.R;
 import com.mmvtc.college.adapter.CollegePagerAdapter;
 import com.mmvtc.college.bean.NewsBean;
+import com.mmvtc.college.view.UpdateData;
 import com.youth.banner.Banner;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
@@ -49,7 +51,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 
-public class CollegeFragment extends Fragment{
+public class CollegeFragment extends Fragment implements UpdateData {
 
     @BindView(R.id.banner)
     Banner mBanner;
@@ -174,9 +176,10 @@ public class CollegeFragment extends Fragment{
                     //清除上次获取数据
                     images.clear();
                     newsBeansList.clear();
+                    int timeout=8000;
                     //获取轮播数据
                     Document doc = Jsoup.connect("http://www.mmvtc.cn/templet/default/index.jsp")
-                            .timeout(3000)
+                            .timeout(timeout)
                             .post();
                     Element body = doc.body();
                     Element logo = body.getElementById("owl-demo");
@@ -186,17 +189,17 @@ public class CollegeFragment extends Fragment{
 
                     //获得系部新闻
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/default/ShowClassPage.jsp?id=915")
-                            .timeout(3000)
+                            .timeout(timeout)
                             .post();
                     addNewsList(doc,0);
                     //获得通知公告
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/default/ShowClassPage.jsp?id=914")
-                            .timeout(3000)
+                            .timeout(timeout)
                             .post();
                     addNewsList(doc,1);
                     //获得系部动态
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/default/ShowClassPage.jsp?id=1961")
-                            .timeout(3000)
+                            .timeout(timeout)
                             .post();
                     addNewsList(doc,2);
 
@@ -234,6 +237,12 @@ public class CollegeFragment extends Fragment{
         super.onDestroyView();
         unbinder.unbind();
     }
-
+    @Override
+    public void updateData() {
+        if (images.size()==0||newsBeansList.size()==0){
+            initData();
+        }
+        Log.i(TAG, "updateData: "+TAG);
+    }
 
 }

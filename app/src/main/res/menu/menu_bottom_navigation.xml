@@ -3,15 +3,15 @@
     <item
         android:id="@+id/item_news"
         android:icon="@mipmap/ic_news_gray"
-        android:title="新闻" />
+        android:title="学院新闻" />
     <item
         android:id="@+id/item_lib"
-        android:icon="@mipmap/ic_library_gray"
+        android:icon="@drawable/ic_library_gray"
         android:title="计算机系" />
 
     <item
         android:id="@+id/item_find"
-        android:icon="@mipmap/ic_discovery_gray"
+        android:icon="@mipmap/ic_library_gray"
         android:title="土木系" />
 
 

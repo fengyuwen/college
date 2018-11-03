@@ -1,4 +1,4 @@
-package com.mmvtc.college;
+package com.mmvtc.college.utils;
 
 import android.support.design.internal.BottomNavigationItemView;
 import android.support.design.internal.BottomNavigationMenuView;

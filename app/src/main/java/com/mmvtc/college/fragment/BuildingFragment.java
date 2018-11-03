@@ -9,16 +9,18 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.mmvtc.college.App;
-import com.mmvtc.college.GlideImageLoader;
 import com.mmvtc.college.R;
 import com.mmvtc.college.adapter.BuildingPagerAdapter;
 import com.mmvtc.college.bean.NewsBean;
+import com.mmvtc.college.utils.GlideImageLoader;
+import com.mmvtc.college.view.UpdateData;
 import com.youth.banner.Banner;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
@@ -47,7 +49,7 @@ import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
 
-public class BuildingFragment extends Fragment {
+public class BuildingFragment extends Fragment implements UpdateData {
 
     @BindView(R.id.banner)
     Banner mBanner;
@@ -56,10 +58,10 @@ public class BuildingFragment extends Fragment {
     @BindView(R.id.view_pager)
     ViewPager viewPager;
 
-    private List<List<NewsBean>> NewsBeansList;
+    private List<List<NewsBean>> newsBeansList;
     private List<String> images;
 
-    private static final String TAG = "BaseFragment";
+    private static final String TAG = "BuildingFragment";
     //标题栏
     private static final String[] CHANNELS = new String[]{"新闻动态", "教学科研", "招生就业","系部概况"};
     private List<String> mDataList = Arrays.asList(CHANNELS);
@@ -89,8 +91,9 @@ public class BuildingFragment extends Fragment {
     }
 
 
+
     private void init() {
-        NewsBeansList = new ArrayList<>();
+        newsBeansList = new ArrayList<>();
         images = new ArrayList<>();
         buildingPagerAdapter = new BuildingPagerAdapter(mDataList);
         viewPager.setAdapter(buildingPagerAdapter);
@@ -148,7 +151,7 @@ public class BuildingFragment extends Fragment {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
-                    buildingPagerAdapter.setData(NewsBeansList);
+                    buildingPagerAdapter.setData(newsBeansList);
                     logoStart();
                     break;
             }
@@ -170,10 +173,11 @@ public class BuildingFragment extends Fragment {
                 try {
                     //清除上次获取数据
                     images.clear();
-                    NewsBeansList.clear();
+                    newsBeansList.clear();
+                    int timeout=8000;
                     //获取轮播数据
                     Document doc = Jsoup.connect("http://www.mmvtc.cn/templet/tmgcx/")
-                            .timeout(3000)
+                            .timeout(timeout)
                             .post();
                     Element logo = doc.body().getElementsByClass("slides").first();
 
@@ -183,28 +187,28 @@ public class BuildingFragment extends Fragment {
 
                     //获得新闻动态
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/tmgcx/ShowClass.jsp?id=1273")
-                            .timeout(3000)
+                            .timeout(timeout)
                             .post();
                     addNewsList(doc,0);
 
                     //获得教学科研
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/tmgcx/ShowClass.jsp?id=2052")
-                            .timeout(3000)
+                            .timeout(timeout)
                             .post();
                     addNewsList(doc,1);
 
                     //获得教学科研
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/tmgcx/ShowClass.jsp?id=2053")
-                            .timeout(3000)
+                            .timeout(timeout)
                             .post();
                     addNewsList(doc,2);
 
                     //获得教学科研
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/tmgcx/ShowClass.jsp?id=2050")
-                            .timeout(3000)
+                            .timeout(timeout)
                             .post();
                     addNewsList(doc,3);
-
+                    Log.i(TAG, "run: "+123);
                     handler.sendEmptyMessage(1);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -229,7 +233,7 @@ public class BuildingFragment extends Fragment {
             newsBean.setTime(time);
             list.add(newsBean);
         }
-        NewsBeansList.add(list);
+        newsBeansList.add(list);
     }
 
     @Override
@@ -239,4 +243,11 @@ public class BuildingFragment extends Fragment {
     }
 
 
+    @Override
+    public void updateData() {
+        if (images.size()==0||newsBeansList.size()==0){
+            initData();
+        }
+        Log.i(TAG, "updateData: "+TAG);
+    }
 }
