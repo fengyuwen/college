@@ -5,6 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.mmvtc.college.activity.NewsActivity"
+<<<<<<< HEAD
+=======
+    android:orientation="vertical">
+    <!--<ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="none"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+-->
+>>>>>>> 879ef399f8ccd7ed6978647c9a89b46f9187ec63
 
     android:orientation="vertical"
     android:padding="10dp">
@@ -22,4 +36,15 @@
 
    </ListView>
 
+<<<<<<< HEAD
+=======
+   <ListView
+       android:id="@+id/lv_text"
+       android:layout_width="match_parent"
+       android:layout_height="0dp"
+       android:layout_weight="1">
+
+   </ListView>
+
+>>>>>>> 879ef399f8ccd7ed6978647c9a89b46f9187ec63
 </LinearLayout>

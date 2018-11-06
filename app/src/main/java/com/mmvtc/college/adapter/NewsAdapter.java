@@ -3,6 +3,7 @@ package com.mmvtc.college.adapter;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+<<<<<<< HEAD
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.BaseAdapter;
@@ -13,14 +14,24 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.mmvtc.college.R;
 
+=======
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+>>>>>>> 879ef399f8ccd7ed6978647c9a89b46f9187ec63
 import com.mmvtc.college.bean.NewContontBean;
 
 import java.util.List;
 
+<<<<<<< HEAD
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+=======
+>>>>>>> 879ef399f8ccd7ed6978647c9a89b46f9187ec63
 public class NewsAdapter extends BaseAdapter {
     public final static int P = 0;
     public final static int IFRAME = 1;
@@ -33,18 +44,26 @@ public class NewsAdapter extends BaseAdapter {
         this.context = context;
     }
 
+<<<<<<< HEAD
 
     public void setData(List<NewContontBean> contontBeans) {
 
+=======
+    public void setData(List<NewContontBean> contontBeans){
+>>>>>>> 879ef399f8ccd7ed6978647c9a89b46f9187ec63
         this.contontBeans = contontBeans;
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
+<<<<<<< HEAD
 
         return contontBeans == null ? 0 : contontBeans.size();
 
+=======
+        return contontBeans.size();
+>>>>>>> 879ef399f8ccd7ed6978647c9a89b46f9187ec63
     }
 
     @Override
@@ -69,6 +88,7 @@ public class NewsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+<<<<<<< HEAD
 
         ViewHolder holder;
         if (view != null) {
@@ -104,11 +124,27 @@ public class NewsAdapter extends BaseAdapter {
                 holder.mIvImg.setVisibility(View.VISIBLE);
                 Glide.with(context).load(contontBeans.get(i).getText()).into(holder.mIvImg);
 
+=======
+        switch (getItemViewType(i)) {
+            case P:
+                view=new TextView(context);
+                ((TextView) view).setText("  "+contontBeans.get(i).getText());
+                break;
+            case IFRAME:
+                view=new TextView(context);
+                ((TextView) view).setText("  "+contontBeans.get(i).getText());
+                break;
+            case IMG:
+                view=new ImageView(context);
+                ((ImageView) view).setScaleType(ImageView.ScaleType.FIT_XY);
+                Glide.with(context).load(contontBeans.get(i).getText()).into((ImageView) view);
+>>>>>>> 879ef399f8ccd7ed6978647c9a89b46f9187ec63
                 break;
         }
 
         return view;
     }
+<<<<<<< HEAD
 
 
 
@@ -125,4 +161,6 @@ public class NewsAdapter extends BaseAdapter {
         }
     }
 
+=======
+>>>>>>> 879ef399f8ccd7ed6978647c9a89b46f9187ec63
 }
