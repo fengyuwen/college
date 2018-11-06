@@ -11,8 +11,10 @@
         android:icon="@mipmap/app"
         android:label="茂职校园"
         android:supportsRtl="true"
+
         android:theme="@style/AppTheme"
         android:hardwareAccelerated="true">
+
         <activity android:name=".activity.LoginActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".activity.UserInfoActivity" android:screenOrientation="portrait" />
         <activity android:name=".activity.ModifyPsw" android:screenOrientation="portrait" />

@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.ListView;
 import android.widget.TextView;
 
+
 import com.mmvtc.college.R;
 import com.mmvtc.college.adapter.NewsAdapter;
 import com.mmvtc.college.bean.NewContontBean;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NewsActivity extends AppCompatActivity {
+
 
 
     private ListView lvText;
@@ -63,6 +65,7 @@ public class NewsActivity extends AppCompatActivity {
                 initData3();
                 break;
         }
+
     }
 
     //处理学院新闻
@@ -132,6 +135,7 @@ public class NewsActivity extends AppCompatActivity {
         }).start();
 
     }
+
 
     //处理土木新闻
     private void initData3() {
@@ -213,6 +217,7 @@ public class NewsActivity extends AppCompatActivity {
             tvMessage.setText("" + message);
             newsAdapter = new NewsAdapter(newContontBeans, NewsActivity.this);
             lvText.setAdapter(newsAdapter);
+
         }
     };
 

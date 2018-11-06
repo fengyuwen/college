@@ -76,6 +76,7 @@ public class CollegeNewsAdapter extends BaseAdapter {
                     a="http://www.mmvtc.cn" +collegeNewsBeens.get(i1).getTextValue();
                 }else a=collegeNewsBeens.get(i1).getTextValue();
                 context.startActivity(new Intent(context,NewsActivity.class).putExtra("type","1").putExtra("a",a));
+
             }
         });
         return view;

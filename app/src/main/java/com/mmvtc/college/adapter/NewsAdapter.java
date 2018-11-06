@@ -12,9 +12,11 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.mmvtc.college.R;
+
 import com.mmvtc.college.bean.NewContontBean;
 
 import java.util.List;
+
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,14 +33,18 @@ public class NewsAdapter extends BaseAdapter {
         this.context = context;
     }
 
+
     public void setData(List<NewContontBean> contontBeans) {
+
         this.contontBeans = contontBeans;
         notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
+
         return contontBeans == null ? 0 : contontBeans.size();
+
     }
 
     @Override
@@ -63,6 +69,7 @@ public class NewsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
+
         ViewHolder holder;
         if (view != null) {
             holder = (ViewHolder) view.getTag();
@@ -96,11 +103,13 @@ public class NewsAdapter extends BaseAdapter {
             case IMG:
                 holder.mIvImg.setVisibility(View.VISIBLE);
                 Glide.with(context).load(contontBeans.get(i).getText()).into(holder.mIvImg);
+
                 break;
         }
 
         return view;
     }
+
 
 
     static class ViewHolder {
@@ -115,4 +124,5 @@ public class NewsAdapter extends BaseAdapter {
             ButterKnife.bind(this, view);
         }
     }
+
 }

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.mmvtc.college.activity.NewsActivity"
+
     android:orientation="vertical"
     android:padding="10dp">
 
@@ -13,9 +14,11 @@
        android:id="@+id/lv_text"
        android:layout_width="match_parent"
        android:layout_height="0dp"
+
        android:divider="@null"
        android:layout_weight="1"
        android:scrollbars="none">
+
 
    </ListView>
 
