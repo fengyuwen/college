@@ -1,6 +1,7 @@
 package com.mmvtc.college.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -8,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mmvtc.college.R;
+import com.mmvtc.college.activity.NewsActivity;
 import com.mmvtc.college.bean.NewsBean;
 
 import java.util.List;
@@ -64,7 +66,18 @@ public class CollegeNewsAdapter extends BaseAdapter {
             holder.mTvTime.setText(collegeNewsBeens.get(i).getTime());
             holder.mTvEyeMeasure.setText(collegeNewsBeens.get(i).getEyeMeasure());
             holder.mTvText.setText(collegeNewsBeens.get(i).getText());
-
+        final int i1 = i;
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Toast.makeText(App.appContext, "" + collegeNewsBeens.get(i1).getText(), Toast.LENGTH_SHORT).show();
+                String a="";
+                if (collegeNewsBeens.get(i1).getTextValue().indexOf("http")==-1){
+                    a="http://www.mmvtc.cn" +collegeNewsBeens.get(i1).getTextValue();
+                }else a=collegeNewsBeens.get(i1).getTextValue();
+                context.startActivity(new Intent(context,NewsActivity.class).putExtra("type","1").putExtra("a",a));
+            }
+        });
         return view;
     }
 

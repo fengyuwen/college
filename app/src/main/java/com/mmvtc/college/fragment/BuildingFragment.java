@@ -14,13 +14,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.mmvtc.college.App;
 import com.mmvtc.college.R;
 import com.mmvtc.college.adapter.BuildingPagerAdapter;
 import com.mmvtc.college.bean.NewsBean;
 import com.mmvtc.college.utils.GlideImageLoader;
-import com.mmvtc.college.view.UpdateData;
+import com.mmvtc.college.view.ShowHeadView;
 import com.youth.banner.Banner;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
@@ -46,10 +48,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
-public class BuildingFragment extends Fragment implements UpdateData {
+public class BuildingFragment extends Fragment {
 
     @BindView(R.id.banner)
     Banner mBanner;
@@ -57,13 +60,15 @@ public class BuildingFragment extends Fragment implements UpdateData {
     MagicIndicator magicIndicator;
     @BindView(R.id.view_pager)
     ViewPager viewPager;
+    @BindView(R.id.rl_outTime)
+    RelativeLayout rlOutTime;
 
     private List<List<NewsBean>> newsBeansList;
     private List<String> images;
 
     private static final String TAG = "BuildingFragment";
     //标题栏
-    private static final String[] CHANNELS = new String[]{"新闻动态", "教学科研", "招生就业","系部概况"};
+    private static final String[] CHANNELS = new String[]{"新闻动态", "教学科研", "招生就业", "系部概况"};
     private List<String> mDataList = Arrays.asList(CHANNELS);
     private BuildingPagerAdapter buildingPagerAdapter;
 
@@ -74,8 +79,13 @@ public class BuildingFragment extends Fragment implements UpdateData {
     Unbinder unbinder;
 
 
-    public static BuildingFragment newInstance() {
+    private Context context;
+    private ShowHeadView showHeadView;
+
+    public static BuildingFragment newInstance(Context context, ShowHeadView showHeadView) {
         BuildingFragment fragment = new BuildingFragment();
+        fragment.showHeadView = showHeadView;
+        fragment.context = context;
         return fragment;
     }
 
@@ -91,11 +101,10 @@ public class BuildingFragment extends Fragment implements UpdateData {
     }
 
 
-
     private void init() {
         newsBeansList = new ArrayList<>();
         images = new ArrayList<>();
-        buildingPagerAdapter = new BuildingPagerAdapter(mDataList);
+        buildingPagerAdapter = new BuildingPagerAdapter(mDataList, context, showHeadView);
         viewPager.setAdapter(buildingPagerAdapter);
     }
 
@@ -111,7 +120,6 @@ public class BuildingFragment extends Fragment implements UpdateData {
             @Override
             public IPagerTitleView getTitleView(Context context, final int index) {
                 BadgePagerTitleView badgePagerTitleView = new BadgePagerTitleView(context);
-
                 SimplePagerTitleView simplePagerTitleView = new ColorTransitionPagerTitleView(context);
                 simplePagerTitleView.setNormalColor(Color.GRAY);
                 simplePagerTitleView.setSelectedColor(Color.WHITE);
@@ -153,6 +161,10 @@ public class BuildingFragment extends Fragment implements UpdateData {
                 case 1:
                     buildingPagerAdapter.setData(newsBeansList);
                     logoStart();
+                    rlOutTime.setVisibility(View.GONE);
+                    break;
+                case 2:
+                    rlOutTime.setVisibility(View.VISIBLE);
                     break;
             }
         }
@@ -174,7 +186,7 @@ public class BuildingFragment extends Fragment implements UpdateData {
                     //清除上次获取数据
                     images.clear();
                     newsBeansList.clear();
-                    int timeout=8000;
+                    int timeout = 8000;
                     //获取轮播数据
                     Document doc = Jsoup.connect("http://www.mmvtc.cn/templet/tmgcx/")
                             .timeout(timeout)
@@ -189,35 +201,37 @@ public class BuildingFragment extends Fragment implements UpdateData {
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/tmgcx/ShowClass.jsp?id=1273")
                             .timeout(timeout)
                             .post();
-                    addNewsList(doc,0);
+                    addNewsList(doc, 0);
 
                     //获得教学科研
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/tmgcx/ShowClass.jsp?id=2052")
                             .timeout(timeout)
                             .post();
-                    addNewsList(doc,1);
+                    addNewsList(doc, 1);
 
                     //获得教学科研
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/tmgcx/ShowClass.jsp?id=2053")
                             .timeout(timeout)
                             .post();
-                    addNewsList(doc,2);
+                    addNewsList(doc, 2);
 
                     //获得教学科研
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/tmgcx/ShowClass.jsp?id=2050")
                             .timeout(timeout)
                             .post();
-                    addNewsList(doc,3);
-                    Log.i(TAG, "run: "+123);
+                    addNewsList(doc, 3);
+
                     handler.sendEmptyMessage(1);
                 } catch (Exception e) {
+                    handler.sendEmptyMessage(2);
                     e.printStackTrace();
                 }
             }
         }).start();
 
     }
-    public void addNewsList(Document doc,int i){
+
+    public void addNewsList(Document doc, int i) {
         Elements lis = doc.body().getElementsByClass("info").first().getElementsByTag("li");
         List<NewsBean> list = new ArrayList<>();
         NewsBean newsBean;
@@ -242,12 +256,25 @@ public class BuildingFragment extends Fragment implements UpdateData {
         unbinder.unbind();
     }
 
+    public void showLogo(boolean flag) {
+        if (flag)
+            mBanner.setVisibility(View.VISIBLE);
+        else mBanner.setVisibility(View.GONE);
+    }
 
-    @Override
-    public void updateData() {
-        if (images.size()==0||newsBeansList.size()==0){
+    boolean time=true;
+    @OnClick(R.id.rl_outTime)
+    public void onViewClicked() {
+        if (time) {
             initData();
+            time=false;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    time=true;
+                }
+            },2000);
         }
-        Log.i(TAG, "updateData: "+TAG);
+        else Toast.makeText(context, "2秒内只能点一次", Toast.LENGTH_SHORT).show();
     }
 }

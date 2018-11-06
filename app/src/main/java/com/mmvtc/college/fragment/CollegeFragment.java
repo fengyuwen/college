@@ -9,20 +9,21 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.mmvtc.college.App;
-import com.mmvtc.college.utils.GlideImageLoader;
 import com.mmvtc.college.R;
 import com.mmvtc.college.adapter.CollegePagerAdapter;
 import com.mmvtc.college.bean.NewsBean;
-import com.mmvtc.college.view.UpdateData;
+import com.mmvtc.college.utils.GlideImageLoader;
+import com.mmvtc.college.view.ShowHeadView;
 import com.youth.banner.Banner;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
@@ -48,10 +49,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
-public class CollegeFragment extends Fragment implements UpdateData {
+public class CollegeFragment extends Fragment {
 
     @BindView(R.id.banner)
     Banner mBanner;
@@ -67,21 +69,25 @@ public class CollegeFragment extends Fragment implements UpdateData {
     ListView lvContent;
     @BindView(R.id.activity_college_massage)
     LinearLayout activityCollegeMassage;
+    @BindView(R.id.rl_outTime)
+    RelativeLayout rlOutTime;
 
 
     private List<String> images;
     private static final String TAG = "BaseFragment";
     private List<List<NewsBean>> newsBeansList;
     //标题栏
-    private static final String[] CHANNELS = new String[]{"学院新闻", "通知公告","系部动态"};
+    private static final String[] CHANNELS = new String[]{"学院新闻", "通知公告", "系部动态"};
     private List<String> mDataList = Arrays.asList(CHANNELS);
     private CollegePagerAdapter collegePagerAdapter;
-
     Unbinder unbinder;
+    private Context mContext;
+    private ShowHeadView showHeadView;
 
-
-    public static CollegeFragment newInstance() {
+    public static CollegeFragment newInstance(Context context, ShowHeadView showHeadView) {
         CollegeFragment fragment = new CollegeFragment();
+        fragment.mContext = context;
+        fragment.showHeadView = showHeadView;
         return fragment;
     }
 
@@ -99,9 +105,10 @@ public class CollegeFragment extends Fragment implements UpdateData {
     private void init() {
         images = new ArrayList<>();
         newsBeansList = new ArrayList<>();
-        collegePagerAdapter = new CollegePagerAdapter(mDataList);
+        collegePagerAdapter = new CollegePagerAdapter(mDataList, mContext, showHeadView);
         viewPager.setAdapter(collegePagerAdapter);
     }
+
     private void initMagicIndicator() {
         CommonNavigator commonNavigator = new CommonNavigator(App.appContext);
         commonNavigator.setAdapter(new CommonNavigatorAdapter() {
@@ -148,6 +155,7 @@ public class CollegeFragment extends Fragment implements UpdateData {
         });
         ViewPagerHelper.bind(magicIndicator, viewPager);
     }
+
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -155,8 +163,11 @@ public class CollegeFragment extends Fragment implements UpdateData {
                 case 1:
                     collegePagerAdapter.setData(newsBeansList);
                     logoStart();
+                    rlOutTime.setVisibility(View.GONE);
                     break;
-
+                case 2:
+                    rlOutTime.setVisibility(View.VISIBLE);
+                    break;
             }
             logoStart();
         }
@@ -168,7 +179,8 @@ public class CollegeFragment extends Fragment implements UpdateData {
         mBanner.setImages(images);
         mBanner.start();
     }
-    private void initData() {
+
+    private synchronized void initData() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -176,7 +188,7 @@ public class CollegeFragment extends Fragment implements UpdateData {
                     //清除上次获取数据
                     images.clear();
                     newsBeansList.clear();
-                    int timeout=8000;
+                    int timeout = 8000;
                     //获取轮播数据
                     Document doc = Jsoup.connect("http://www.mmvtc.cn/templet/default/index.jsp")
                             .timeout(timeout)
@@ -191,27 +203,29 @@ public class CollegeFragment extends Fragment implements UpdateData {
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/default/ShowClassPage.jsp?id=915")
                             .timeout(timeout)
                             .post();
-                    addNewsList(doc,0);
+                    addNewsList(doc, 0);
                     //获得通知公告
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/default/ShowClassPage.jsp?id=914")
                             .timeout(timeout)
                             .post();
-                    addNewsList(doc,1);
+                    addNewsList(doc, 1);
                     //获得系部动态
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/default/ShowClassPage.jsp?id=1961")
                             .timeout(timeout)
                             .post();
-                    addNewsList(doc,2);
+                    addNewsList(doc, 2);
 
                     handler.sendEmptyMessage(1);
                 } catch (Exception e) {
+                    handler.sendEmptyMessage(2);
                     e.printStackTrace();
                 }
             }
         }).start();
 
     }
-    public void addNewsList(Document doc,int i){
+
+    public void addNewsList(Document doc, int i) {
         Elements lis = doc.body().select("ul.list-unstyled").get(1).getElementsByTag("li");
         List<NewsBean> list = new ArrayList<>();
         NewsBean newsBean;
@@ -237,12 +251,28 @@ public class CollegeFragment extends Fragment implements UpdateData {
         super.onDestroyView();
         unbinder.unbind();
     }
-    @Override
-    public void updateData() {
-        if (images.size()==0||newsBeansList.size()==0){
+
+    public void showLogo(boolean flag) {
+        if (flag)
+            mBanner.setVisibility(View.VISIBLE);
+        else mBanner.setVisibility(View.GONE);
+    }
+
+    boolean time = true;
+
+    @OnClick(R.id.rl_outTime)
+    public void onViewClicked() {
+        if (time) {
             initData();
+            time=false;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    time=true;
+                }
+            },2000);
         }
-        Log.i(TAG, "updateData: "+TAG);
+        else Toast.makeText(mContext, "2秒内只能点一次", Toast.LENGTH_SHORT).show();
     }
 
 }

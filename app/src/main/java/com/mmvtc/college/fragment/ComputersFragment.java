@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.mmvtc.college.App;
@@ -21,7 +22,7 @@ import com.mmvtc.college.R;
 import com.mmvtc.college.adapter.ComputersPagerAdapter;
 import com.mmvtc.college.bean.NewsBean;
 import com.mmvtc.college.utils.GlideImageLoader;
-import com.mmvtc.college.view.UpdateData;
+import com.mmvtc.college.view.ShowHeadView;
 import com.youth.banner.Banner;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
@@ -43,14 +44,16 @@ import org.jsoup.select.Elements;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
-public class ComputersFragment extends Fragment implements UpdateData {
+public class ComputersFragment extends Fragment {
 
     @BindView(R.id.banner)
     Banner mBanner;
@@ -58,22 +61,28 @@ public class ComputersFragment extends Fragment implements UpdateData {
     MagicIndicator magicIndicator;
     @BindView(R.id.view_pager)
     ViewPager viewPager;
+    @BindView(R.id.rl_outTime)
+    RelativeLayout rlOutTime;
 
     private List<List<NewsBean>> newsBeansList;
     private List<String> images;
 
     private static final String TAG = "BaseFragment";
     //标题栏
-    private static final String[] CHANNELS = new String[]{"系部新闻", "公告通知", "招生就业", "技能竞赛", "教学科研","系部概况"};
+    private static final String[] CHANNELS = new String[]{"系部新闻", "公告通知", "招生就业", "技能竞赛", "教学科研", "系部概况"};
     private List<String> mDataList = Arrays.asList(CHANNELS);
     private ComputersPagerAdapter mExamplePagerAdapter;
 
 
     Unbinder unbinder;
 
+    private ShowHeadView showHeadView;
+    private Context mContext;
 
-    public static ComputersFragment newInstance() {
+    public static ComputersFragment newInstance(Context context, ShowHeadView showHeadView) {
         ComputersFragment fragment = new ComputersFragment();
+        fragment.mContext = context;
+        fragment.showHeadView = showHeadView;
         return fragment;
     }
 
@@ -92,7 +101,7 @@ public class ComputersFragment extends Fragment implements UpdateData {
     private void init() {
         newsBeansList = new ArrayList<>();
         images = new ArrayList<>();
-        mExamplePagerAdapter = new ComputersPagerAdapter(mDataList);
+        mExamplePagerAdapter = new ComputersPagerAdapter(mDataList, mContext, showHeadView);
         viewPager.setAdapter(mExamplePagerAdapter);
     }
 
@@ -150,9 +159,10 @@ public class ComputersFragment extends Fragment implements UpdateData {
                 case 1:
                     mExamplePagerAdapter.setData(newsBeansList);
                     logoStart();
+                    rlOutTime.setVisibility(View.GONE);
                     break;
                 case 2:
-                    Toast.makeText(App.appContext, "网络请求超时，请检查网络后重试", Toast.LENGTH_SHORT).show();
+                    rlOutTime.setVisibility(View.VISIBLE);
                     break;
             }
         }
@@ -167,6 +177,7 @@ public class ComputersFragment extends Fragment implements UpdateData {
 
 
     private void initData() {
+
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -174,13 +185,12 @@ public class ComputersFragment extends Fragment implements UpdateData {
                     //清除上次获取数据
                     images.clear();
                     newsBeansList.clear();
-                    int timeout=8000;
+                    int timeout = 8000;
                     //获取轮播数据
                     Document doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/indexCope.jsp")
                             .timeout(timeout)
                             .post();
                     Element logo = doc.body().getElementsByClass("orbit").first();
-
                     for (Element img : logo.getElementsByTag("img")) {
                         images.add("http://www.mmvtc.cn" + img.attr("src"));
                     }
@@ -188,32 +198,33 @@ public class ComputersFragment extends Fragment implements UpdateData {
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/ShowClass.jsp?id=1212")
                             .timeout(timeout)
                             .post();
-                    addNewsList(doc,0);
+                    addNewsList(doc, 0);
                     //获得公告通知
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/ShowClass.jsp?id=1221")
                             .timeout(timeout)
                             .post();
-                    addNewsList(doc,1);
+                    addNewsList(doc, 1);
                     //获得招生就业
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/ShowClass.jsp?id=1220")
                             .timeout(timeout)
                             .post();
-                    addNewsList(doc,2);
+                    addNewsList(doc, 2);
                     //获得技能竞赛
+                    Log.i(TAG, "run1: " + new Date());
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/ShowClass.jsp?id=2781")
                             .timeout(timeout)
                             .post();
-                    addNewsList(doc,3);
+                    addNewsList(doc, 3);
                     //获得教学科研
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/ShowClass.jsp?id=1216")
                             .timeout(timeout)
                             .post();
-                    addNewsList(doc,4);
+                    addNewsList(doc, 4);
                     //获得系部概况
                     doc = Jsoup.connect("http://www.mmvtc.cn/templet/jsjgcx/ShowClass.jsp?id=1214")
                             .timeout(timeout)
                             .post();
-                    addNewsList(doc,5);
+                    addNewsList(doc, 5);
 
                     handler.sendEmptyMessage(1);
                 } catch (Exception e) {
@@ -222,9 +233,10 @@ public class ComputersFragment extends Fragment implements UpdateData {
                 }
             }
         }).start();
-
     }
-    public void addNewsList(Document doc,int i){
+
+
+    public void addNewsList(Document doc, int i) {
         Elements lis = doc.body().getElementsByClass("cbox").first().getElementsByTag("li");
         List<NewsBean> list = new ArrayList<>();
         NewsBean newsBean;
@@ -249,11 +261,25 @@ public class ComputersFragment extends Fragment implements UpdateData {
         unbinder.unbind();
     }
 
-    @Override
-    public void updateData() {
-        if (images.size()==0||newsBeansList.size()==0){
+    public void showLogo(boolean flag) {
+        if (flag)
+            mBanner.setVisibility(View.VISIBLE);
+        else mBanner.setVisibility(View.GONE);
+    }
+
+    boolean time=true;
+    @OnClick(R.id.rl_outTime)
+    public void onViewClicked() {
+        if (time) {
             initData();
+            time=false;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    time=true;
+                }
+            },2000);
         }
-        Log.i(TAG, "updateData: "+TAG);
+        else Toast.makeText(mContext, "2秒内只能点一次", Toast.LENGTH_SHORT).show();
     }
 }

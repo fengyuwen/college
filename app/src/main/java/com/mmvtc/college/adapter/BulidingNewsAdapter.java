@@ -1,14 +1,16 @@
 package com.mmvtc.college.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mmvtc.college.App;
 import com.mmvtc.college.R;
+import com.mmvtc.college.activity.NewsActivity;
 import com.mmvtc.college.bean.NewsBean;
 
 import java.util.List;
@@ -24,6 +26,7 @@ public class BulidingNewsAdapter extends BaseAdapter {
 
     private Context context;
     private List<NewsBean> collegeNewsBeens;
+
 
     public BulidingNewsAdapter(Context context, List<NewsBean> collegeNewsBeens) {
         this.context = context;
@@ -50,6 +53,8 @@ public class BulidingNewsAdapter extends BaseAdapter {
         return i;
     }
 
+
+
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         ViewHolder holder;
@@ -67,12 +72,19 @@ public class BulidingNewsAdapter extends BaseAdapter {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(App.appContext, "" + collegeNewsBeens.get(i1).getText(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(App.appContext, "" + collegeNewsBeens.get(i1).getText(), Toast.LENGTH_SHORT).show();
+                String a="";
+                if (collegeNewsBeens.get(i1).getTextValue().indexOf("http")==-1){
+                    a="http://www.mmvtc.cn" +collegeNewsBeens.get(i1).getTextValue();
+                }else a=collegeNewsBeens.get(i1).getTextValue();
+                context.startActivity(new Intent(context,NewsActivity.class).putExtra("type","3").putExtra("a",a));
             }
         });
 
         return view;
     }
+
+
 
 
     static class ViewHolder {

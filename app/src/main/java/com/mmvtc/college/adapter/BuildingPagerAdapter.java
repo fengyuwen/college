@@ -1,36 +1,82 @@
 package com.mmvtc.college.adapter;
 
+import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
+import android.widget.AbsListView.OnScrollListener;
 
-import com.mmvtc.college.App;
 import com.mmvtc.college.bean.NewsBean;
+import com.mmvtc.college.view.ShowHeadView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class BuildingPagerAdapter extends PagerAdapter{
+public class BuildingPagerAdapter extends PagerAdapter {
     private List<String> mDataList;
     private List<ListView> listViews;
     private List<BulidingNewsAdapter> adapters;
 
     private ListView listView;
+    private Context context;
 
-    public BuildingPagerAdapter(List<String> dataList) {
+    public BuildingPagerAdapter(List<String> dataList, final Context context, final ShowHeadView showHeadView) {
         mDataList = dataList;
+        this.context = context;
         listViews = new ArrayList<>();
         adapters = new ArrayList<>();
         ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,
                 ViewGroup.LayoutParams.FILL_PARENT);
         for (int i = 0; i < dataList.size(); i++) {
-            listView=new ListView(App.appContext);
+            listView = new ListView(this.context);
             listView.setLayoutParams(lp);
             listViews.add(listView);
-            adapters.add(new BulidingNewsAdapter(App.appContext, new ArrayList<NewsBean>()));
+            adapters.add(new BulidingNewsAdapter(this.context, new ArrayList<NewsBean>()));
             listViews.get(i).setAdapter(adapters.get(i));
+            final int finalI = i;
+            listView.setOnScrollListener(new OnScrollListener() {
+
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+                    switch (scrollState) {
+                        // 当不滚动时
+                        case OnScrollListener.SCROLL_STATE_IDLE:// 是当屏幕停止滚动时
+                            if (listViews.get(finalI).getFirstVisiblePosition() == 0)
+                                showHeadView.ShowHeadView(true);
+                            else
+                                showHeadView.ShowHeadView(false);
+
+                            break;
+                        case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:// 滚动时
+                            // 判断滚动到顶部
+                            if (listViews.get(finalI).getFirstVisiblePosition() == 0)
+                                showHeadView.ShowHeadView(true);
+                            else
+                                showHeadView.ShowHeadView(false);
+
+                            break;
+                        case OnScrollListener.SCROLL_STATE_FLING:// 是当用户由于之前划动屏幕并抬起手指，屏幕产生惯性滑动时
+                            if (listViews.get(finalI).getFirstVisiblePosition() == 0)
+                                showHeadView.ShowHeadView(true);
+                            else
+                                showHeadView.ShowHeadView(false);
+
+                            break;
+                    }
+
+                }
+
+                @Override
+                public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+
+                }
+
+            });
+
         }
     }
 

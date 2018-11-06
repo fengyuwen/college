@@ -1,8 +1,6 @@
 package com.mmvtc.college.activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -17,9 +15,13 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 import com.mmvtc.college.R;
 import com.mmvtc.college.adapter.HomeAdapter;
 import com.mmvtc.college.adapter.ViewPagerAdapter;
@@ -28,15 +30,13 @@ import com.mmvtc.college.fragment.BuildingFragment;
 import com.mmvtc.college.fragment.CollegeFragment;
 import com.mmvtc.college.fragment.ComputersFragment;
 import com.mmvtc.college.utils.Local;
+import com.mmvtc.college.view.ShowHeadView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -47,7 +47,7 @@ import static android.content.ContentValues.TAG;
 import static com.mmvtc.college.utils.Local.cookie;
 
 
-public class HomeActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
+public class HomeActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, ShowHeadView {
 
     @BindView(R.id.list_left_drawer)
     ListView listLeftDrawer;
@@ -65,6 +65,8 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     TextView tvMainTitle;
     @BindView(R.id.ll_right)
     LinearLayout llRight;
+    @BindView(R.id.title_bar)
+    RelativeLayout titleBar;
 
 
     private ViewPager viewPager;
@@ -82,7 +84,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
-        startActivity(new Intent(this,SplashActivity.class));
+        startActivity(new Intent(this, SplashActivity.class));
         init();
     }
 
@@ -104,6 +106,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                 holder.setText(R.id.txt_content, obj.getIconName());
             }
         };
+
         //侧边栏头部
 
 
@@ -112,7 +115,8 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
             public void onClick(View view) {
                 if (isLogin)
                     startActivity(new Intent(HomeActivity.this, UserInfoActivity.class));
-                else startActivityForResult(new Intent(HomeActivity.this, LoginActivity.class), 0);
+                else
+                    startActivityForResult(new Intent(HomeActivity.this, LoginActivity.class), 0);
             }
         });
 
@@ -144,7 +148,7 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                             case R.id.item_find:
                                 viewPager.setCurrentItem(2);
                                 tvMainTitle.setText("土木系");
-                               // buildingFragment.updateData();
+                                // buildingFragment.updateData();
                                 break;
                         }
                         return false;
@@ -174,11 +178,11 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                         break;
                     case 1:
                         tvMainTitle.setText("计算机工程系");
-                       // computersFragment.updateData();
+                        // computersFragment.updateData();
                         break;
                     case 2:
                         tvMainTitle.setText("土木系");
-                      //  buildingFragment.updateData();
+                        //  buildingFragment.updateData();
                         break;
                 }
             }
@@ -189,12 +193,12 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         });
 
         //禁止ViewPager滑动
-//        viewPager.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                return true;
-//            }
-//        });
+        //        viewPager.setOnTouchListener(new View.OnTouchListener() {
+        //            @Override
+        //            public boolean onTouch(View v, MotionEvent event) {
+        //                return true;
+        //            }
+        //        });
 
         setupViewPager(viewPager);
     }
@@ -203,13 +207,13 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == 200) {
-            isLogin = true;
-            tvUserName.setText(Local.readUser(this));
             setLogin();
         }
     }
 
     private void setLogin() {
+        isLogin = true;
+        tvUserName.setText(Local.readUser(this));
         initHeadIcon();
     }
 
@@ -227,41 +231,17 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                     Element body = doc.body();
                     Element headIcon = body.getElementById("xszp");
                     headIconUrl = "http://jwc.mmvtc.cn/" + headIcon.attr("src");
-                    updateHeadIcon();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            GlideUrl glideUrl = new GlideUrl(headIconUrl, new LazyHeaders.Builder().addHeader("Cookie", cookie).build());
+                            Glide.with(HomeActivity.this).load(glideUrl).into(ivHeadIcon);
+
+                        }
+                    });
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
-        }).start();
-    }
-
-    public void updateHeadIcon() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    URL url = new URL(headIconUrl);
-                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                    conn.setRequestMethod("GET");
-                    conn.setConnectTimeout(5000);
-                    if (!cookie.isEmpty())
-                        conn.setRequestProperty("Cookie", cookie);
-                    final int code = conn.getResponseCode();
-                    if (code == 200) {
-                        InputStream is = conn.getInputStream();
-                        final Bitmap bitmap = BitmapFactory.decodeStream(is);
-                        is.close();
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                ivHeadIcon.setImageBitmap(bitmap);
-                            }
-                        });
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
             }
         }).start();
     }
@@ -269,9 +249,9 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        collegeFragment = CollegeFragment.newInstance();
-        computersFragment = ComputersFragment.newInstance();
-        buildingFragment = BuildingFragment.newInstance();
+        collegeFragment = CollegeFragment.newInstance(this,this);
+        computersFragment = ComputersFragment.newInstance(this,this);
+        buildingFragment = BuildingFragment.newInstance(this,this);
         adapter.addFragment(collegeFragment);
         adapter.addFragment(computersFragment);
         adapter.addFragment(buildingFragment);
@@ -284,10 +264,10 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
         if (isLogin)
             switch (i) {
                 case 0:
-                    startActivity(new Intent(this, ModifyPsw.class));
+                    startActivity(new Intent(this, NewsActivity.class).putExtra("type", "1").putExtra("a", "http://www.mmvtc.cn/templet/default/a.jsp?id=1000"));
                     break;
                 case 1:
-                    startActivity(new Intent(this, ModifyPsw.class));
+                    startActivity(new Intent(this, NewsActivity.class).putExtra("type", "1").putExtra("a", "http://www.mmvtc.cn/templet/default/a.jsp?id=17672"));
                     break;
                 case 2:
                     startActivity(new Intent(this, GradeActivity.class));
@@ -345,12 +325,33 @@ public class HomeActivity extends AppCompatActivity implements AdapterView.OnIte
                     }).start();
                     break;
             }
-        else Toast.makeText(this, "请先登录!", Toast.LENGTH_SHORT).show();
+        else {
+            if (i == 0) {
+                startActivity(new Intent(this, NewsActivity.class).putExtra("type", "3").putExtra("a", "http://www.mmvtc.cn/templet/tmgcx/ShowArticle.jsp?id=47097"));
+                //startActivity(new Intent(this, NewsActivity.class).putExtra("type","1").putExtra("a", "http://www.mmvtc.cn/templet/default/a.jsp?id=1000"));
+            } else if (i == 1) {
+                startActivity(new Intent(this, NewsActivity.class).putExtra("type", "1").putExtra("a", "http://www.mmvtc.cn/templet/default/a.jsp?id=17672"));
+            } else
+                Toast.makeText(this, "请先登录!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     //左上角按钮打开侧边栏
     @OnClick(R.id.tv_back)
     public void onViewClicked() {
         drawerLayout.openDrawer(llRight);
+    }
+
+
+    @Override
+    public void ShowHeadView(boolean flag) {
+        collegeFragment.showLogo(flag);
+        computersFragment.showLogo(flag);
+        buildingFragment.showLogo(flag);
+        if (flag) {
+            titleBar.setVisibility(View.VISIBLE);
+        } else {
+            titleBar.setVisibility(View.GONE);
+        }
     }
 }
