@@ -1,5 +1,6 @@
 package com.mmvtc.college.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -7,10 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ListView;
-<<<<<<< HEAD
+
 import android.widget.TextView;
-=======
->>>>>>> 879ef399f8ccd7ed6978647c9a89b46f9187ec63
+
 
 
 import com.mmvtc.college.R;
@@ -29,13 +29,10 @@ public class NewsActivity extends AppCompatActivity {
 
 
 
-<<<<<<< HEAD
+
     private ListView lvText;
     private TextView tvTitle, tvMessage;
-=======
-    ListView lvText;
 
->>>>>>> 879ef399f8ccd7ed6978647c9a89b46f9187ec63
     private String title = "";
     private String message = "";
     private String a = "";
@@ -52,7 +49,7 @@ public class NewsActivity extends AppCompatActivity {
     }
 
     private void init() {
-<<<<<<< HEAD
+
         lvText = (ListView) findViewById(R.id.lv_text);
         View view = View.inflate(this, R.layout.news_head, null);
         tvTitle = (TextView) view.findViewById(R.id.tv_title);
@@ -74,13 +71,7 @@ public class NewsActivity extends AppCompatActivity {
                 break;
         }
 
-=======
-        lvText= (ListView) findViewById(R.id.lv_text);
-        a = getIntent().getStringExtra("a");
-        newContontBeans = new ArrayList<>();
-        newsAdapter = new NewsAdapter(newContontBeans, this);
-        lvText.setAdapter(newsAdapter);
->>>>>>> 879ef399f8ccd7ed6978647c9a89b46f9187ec63
+
     }
 
     //处理学院新闻
@@ -128,7 +119,7 @@ public class NewsActivity extends AppCompatActivity {
                     newContontBeans.clear();
                     //获取网页数据
                     Document doc = Jsoup.connect(a)
-<<<<<<< HEAD
+
                             .timeout(20 * 1000)
                             .get();
                     Element body = doc.body();
@@ -141,61 +132,7 @@ public class NewsActivity extends AppCompatActivity {
                     for (int i = 0; i < size2; i++) {
                         Element childNode = content.child(i);
                         addData(childNode.tagName(), childNode);
-=======
-                            .timeout(20*1000)
-                            .post();
-                    Element body = doc.body();
-                    title = body.getElementsByClass("ali-ol-experiment-title mt-20").first().text();
-                    message = body.getElementsByClass("ali-ol-experiment-data mb-15").first().text();
-                    Element content = body.getElementsByClass("ali-ol-experiment-content").first();
-                    //添加标题
-                    newContontBean = new NewContontBean();
-                    newContontBean.setType(NewsAdapter.P);
-                    newContontBean.setText(title);
-                    newContontBeans.add(newContontBean);
-                    //添加时间作者等信息
-                    newContontBean = new NewContontBean();
-                    newContontBean.setType(NewsAdapter.P);
-                    newContontBean.setText(message);
-                    newContontBeans.add(newContontBean);
 
-                    //content.childNodeSize();
-                    int size =content.childNodeSize();
-                    int size2 =content.children().size();
-
-                    for (int i = 0; i < size2; i++) {
-                        Element childNode = content.child(i);
-                        switch (childNode.tagName()) {
-                            case "p":
-                                Elements imgs = childNode.getElementsByTag("img");
-                                if (!imgs.isEmpty()) {
-                                    for (Element img : imgs) {
-                                        newContontBean = new NewContontBean();
-                                        newContontBean.setType(NewsAdapter.IMG);
-                                        newContontBean.setText(img.attr("src"));
-                                        newContontBeans.add(newContontBean);
-                                    }
-                                } else {
-                                    newContontBean = new NewContontBean();
-                                    newContontBean.setType(NewsAdapter.P);
-                                    newContontBean.setText(childNode.text());
-                                    newContontBeans.add(newContontBean);
-                                }
-                                break;
-                            case "iframe":
-                                newContontBean = new NewContontBean();
-                                newContontBean.setType(NewsAdapter.IFRAME);
-                                newContontBean.setText(childNode.attr("src"));
-                                newContontBeans.add(newContontBean);
-                                break;
-
-                        }
-
-                    }
-
-
-                    //newContontBean.setText(text);
->>>>>>> 879ef399f8ccd7ed6978647c9a89b46f9187ec63
 
                     }
                     handler.sendEmptyMessage(1);
@@ -208,7 +145,7 @@ public class NewsActivity extends AppCompatActivity {
     }
 
 
-<<<<<<< HEAD
+
     //处理土木新闻
     private void initData3() {
         new Thread(new Runnable() {
@@ -282,8 +219,7 @@ public class NewsActivity extends AppCompatActivity {
     }
 
 
-=======
->>>>>>> 879ef399f8ccd7ed6978647c9a89b46f9187ec63
+
     Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -292,13 +228,7 @@ public class NewsActivity extends AppCompatActivity {
             newsAdapter = new NewsAdapter(newContontBeans, NewsActivity.this);
             lvText.setAdapter(newsAdapter);
 
-<<<<<<< HEAD
-=======
-            //tvTitle.setText("" + title);
-            // tvMessage.setText(""+message);
-             newsAdapter.setData(newContontBeans);
-            // tvText.setText("\t\t"+newContontBean.getText());
->>>>>>> 879ef399f8ccd7ed6978647c9a89b46f9187ec63
+
         }
     };
 

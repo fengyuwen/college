@@ -71,16 +71,14 @@ public class CollegeNewsAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(App.appContext, "" + collegeNewsBeens.get(i1).getText(), Toast.LENGTH_SHORT).show();
-<<<<<<< HEAD
+
                 String a="";
                 if (collegeNewsBeens.get(i1).getTextValue().indexOf("http")==-1){
                     a="http://www.mmvtc.cn" +collegeNewsBeens.get(i1).getTextValue();
                 }else a=collegeNewsBeens.get(i1).getTextValue();
                 context.startActivity(new Intent(context,NewsActivity.class).putExtra("type","1").putExtra("a",a));
 
-=======
-                context.startActivity(new Intent(context,NewsActivity.class).putExtra("a","http://www.mmvtc.cn" +collegeNewsBeens.get(i1).getTextValue()).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
->>>>>>> 879ef399f8ccd7ed6978647c9a89b46f9187ec63
+
             }
         });
         return view;
